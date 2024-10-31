@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExotischNederlandKaasus.DAL
 {
-    internal class SQLDAL
+    public class SQLDAL
     {
     }
 }

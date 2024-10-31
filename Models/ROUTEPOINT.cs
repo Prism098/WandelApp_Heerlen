@@ -8,17 +8,19 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class ROUTEPOINT
     {
-        private int Id { get; set; }
-        private decimal Longitutde { get; set; }
+        private int RoutePointId { get; set; }
+        private decimal Longitude { get; set; }
         private decimal Latitude { get; set; }
         private int SequenceNumber { get; set; }
         // If the RoueRoutepoint table will be added :
         // private List<ROUTEROUTEPOINT> RouteRoutePoints { get; set; }
-        private List<POI> Pois { get; set; }
+        private List<POI> Pois { get; set; } = new List<POI>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
 
         public ROUTEPOINT()
         {
-            
+            Longitude = 0.0m;
+            Latitude = 0.0m;
+            SequenceNumber = 0;
         }
     }
 }
