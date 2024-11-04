@@ -8,14 +8,14 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class GAME
     {
-        private int GameId { get; set; }
-        private string Name { get; set; }
-        private DateTime StartTime { get; set; } = DateTime.Now;
-        private DateTime? EndTime { get; set; }
-        private int? Points { get; set; }
-        private ROUTE? Route { get; set; }
-        private int RouteId { get; set; }
-        private List<QUESTION> questions { get; set; } = new List<QUESTION>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
+        public int GameId { get; private set; }
+        public string Name { get; set; }
+        public DateTime StartTime { get; set; } = DateTime.Now;
+        public DateTime? EndTime { get; set; }
+        public int? Points { get; set; }
+        public ROUTE? Route { get; set; }
+        public int RouteId { get; set; }
+        public List<QUESTION> questions { get; set; } = new List<QUESTION>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
 
 
         public GAME(string name)

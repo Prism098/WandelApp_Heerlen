@@ -9,12 +9,12 @@ namespace ExotischNederlandKaasus.Models
     internal class POI
     {
         private int POIId { get; set; }
-        private decimal Longitude { get; set; }
-        private decimal Latitude { get; set; }
-        private string? Description { get; set; }
-        private string Type { get; set; }
-        private ROUTEPOINT RoutePoint { get; set; }
-        private int RoutePointId { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
+        public string? Description { get; set; }
+        public string Type { get; set; }
+        public ROUTEPOINT RoutePoint { get; set; }
+        public int RoutePointId { get; set; }
 
         public POI()
         {

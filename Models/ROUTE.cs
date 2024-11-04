@@ -8,16 +8,16 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class ROUTE
     {
-        private int RouteId { get; set; }
-        private int Length { get; set; }
-        private decimal Longitude { get; set; }
-        private decimal Latitude { get; set; }
-        private string Type { get; set; }
-        private AREA Area { get; set; }
-        private int AreaId { get; set; }
-        private List<USER> Users { get; set; } = new List<USER>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
-        private List<GAME> Games { get; set; } = new List<GAME>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
-        private List<ROUTEPOINT> RoutePoints { get; set; } = new List<ROUTEPOINT>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!  
+        public int RouteId { get; private set; }
+        public int Length { get; set; }
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
+        public string Type { get; set; }
+        public AREA Area { get; set; }
+        public int AreaId { get; set; }
+        public List<USER> Users { get; set; } = new List<USER>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
+        public List<GAME> Games { get; set; } = new List<GAME>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
+        public List<ROUTEPOINT> RoutePoints { get; set; } = new List<ROUTEPOINT>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!  
 
         public ROUTE()
         {

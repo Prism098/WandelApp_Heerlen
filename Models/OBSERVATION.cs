@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExotischNederlandKaasus.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -9,21 +10,26 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class OBSERVATION
     {
-        private int ObservationId { get; set; }
-        private DateTime DateObserved { get; set; } = DateTime.Now;
-        private string Observer { get; set; }
-        private string? Description { get; set; }
-        private Blob? Picture { get; set; }
-        private AREA Area { get; set; }
-        private int AreaId { get; set; }
-        private USER User { get; set; }
-        private int UserId { get; set; }
-        private SPECIE Specie { get; set; }
-        private int SpecieId { get; set; }
+        public int ObservationId { get; private set; }
+        public DateTime DateObserved { get; set; } = DateTime.Now;
+        public string Observer { get; set; }
+        public string? Description { get; set; }
+        public Blob? Picture { get; set; }
+        public AREA Area { get; set; }
+        public int AreaId { get; set; }
+        public USER User { get; set; }
+        public int UserId { get; set; }
+        public SPECIE Specie { get; set; }
+        public int SpecieId { get; set; }
 
         public OBSERVATION()
         {
             
         }
+
+        //public List<OBSERVATION> AddObservation()
+        //{
+        //    return SQLDAL.AddObservation(this);
+        //}
     }
 }

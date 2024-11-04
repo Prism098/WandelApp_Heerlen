@@ -9,10 +9,10 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class ANSWER
     {
-        private int AnswerId { get; set; }
-        private string AnswerText { get; set; }
-        private QUESTION? Question { get; set; }
-        private int QuestionId { get; set; }
+        public int AnswerId { get; private set; }
+        public string AnswerText { get; set; }
+        public QUESTION? Question { get; set; }
+        public int QuestionId { get; set; }
 
         public ANSWER(string answerText)
         {
