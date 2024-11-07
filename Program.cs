@@ -5,7 +5,44 @@ class Program
 {
     static void Main(string[] args)
     {
-        // een 15 x 15 matrix die de afstanden tussen de locaties voorstelt , 15 omdat er 15 locaties zijn.
+        // Menu System
+        bool exit = false;
+        while (!exit)
+        {
+            Console.Clear(); // Clear the console screen
+            Console.WriteLine("Menu:");
+            Console.WriteLine("1. Calculate Route");
+            Console.WriteLine("2. Exit");
+
+            // Ask for the user's choice
+            Console.Write("\nEnter your choice: ");
+            int choice = GetMenuChoice();
+
+            // Perform action based on the user's choice
+            switch (choice)
+            {
+                case 1:
+                    // Call the Calculate Route function
+                    CalculateRoute();
+                    break;
+
+                case 2:
+                    // Exit the program
+                    exit = true;
+                    Console.WriteLine("Exiting program...");
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice, please try again.");
+                    break;
+            }
+        }
+    }
+
+    // Method to calculate the route between two nodes
+    private static void CalculateRoute()
+    {
+        // een 15 x 15 matrix die de aftanden tussen de locaties voorstelt
         int[,] graph = new int[15, 15]
         {
             { 0, 10, 10, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -45,52 +82,68 @@ class Program
             { 14, "Nationaal park de Meinweg" }
         };
 
-        // geef de locaties weer voor de gebruiker
+        // Geef de locaties weer voor de gebruiker
         Console.WriteLine("Available locations:");
         foreach (var location in nodeNames)
         {
             Console.WriteLine($"{location.Key + 1}. {location.Value}");
         }
 
-        // vraag de gebruiker voor een start en eind locatie in integer formaat
+        // Vraag gebruiker voor een start en eind locatie in integer formaat
         Console.Write("\nEnter the starting location number: ");
         int startNode = GetNodeInput(nodeNames.Count) - 1;
 
         Console.Write("Enter the target location number: ");
         int targetNode = GetNodeInput(nodeNames.Count) - 1;
 
-        // bereken en geef het kortste pad tussen de opgegeven locaties weer
+        // Bereken en geef het kortste pad tussen de opgegeven locaties weer
         List<int> path = Dijkstra.FindShortestPath(graph, startNode, targetNode);
 
         if (path.Count > 0)
         {
-            // Bereken de totale afstand van het pad
-            int totalDistance = 0;
+            Console.WriteLine($"\nShortest path from {nodeNames[startNode]} to {nodeNames[targetNode]}:");
+            int totalDistance = 0; // Variable to keep track of total distance
             for (int i = 0; i < path.Count - 1; i++)
             {
-                totalDistance += graph[path[i], path[i + 1]];
-            }
+                int currentNode = path[i];
+                int nextNode = path[i + 1];
+                totalDistance += graph[currentNode, nextNode]; // Add the distance between nodes
 
-            // Geef het kortste pad en de totale afstand weer
-            Console.WriteLine($"\nShortest path from {nodeNames[startNode]} to {nodeNames[targetNode]}:");
-            foreach (int node in path)
-            {
-                Console.Write(nodeNames[node]);
-                if (node != targetNode) Console.Write(" -> ");
+                Console.Write(nodeNames[currentNode]);
+                if (i < path.Count - 2)
+                    Console.Write(" -> ");
             }
-            Console.WriteLine();
-            Console.WriteLine($"Total distance: {totalDistance} km");
+            Console.WriteLine($"\nTotal distance: {totalDistance} km");
         }
         else
         {
             Console.WriteLine($"\nNo path found from {nodeNames[startNode]} to {nodeNames[targetNode]}.");
         }
+
+        // Wait for user input before returning to the menu
+        Console.WriteLine("\nPress any key to return to the menu...");
+        Console.ReadKey();
     }
 
+    // Method to get valid menu choice
+    private static int GetMenuChoice()
+    {
+        int choice;
+        while (true)
+        {
+            if (int.TryParse(Console.ReadLine(), out choice) && (choice == 1 || choice == 2))
+            {
+                return choice;
+            }
+            Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+        }
+    }
+
+    // Method to get valid node input
     private static int GetNodeInput(int numLocations)
     {
         int node;
-        while (true) // Blijft herhalen totdat de gebruiker een geldige invoer geeft
+        while (true)
         {
             if (int.TryParse(Console.ReadLine(), out node) && node >= 1 && node <= numLocations)
             {
