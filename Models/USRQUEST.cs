@@ -8,12 +8,12 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class USRQUEST
     {
-        private int UsrQuestId { get; set; }
-        private string AnswerText { get; set; }
-        private USER User { get; set;}
-        private int UserId { get; set; }
-        private QUESTION Question { get; set; }
-        private int QuestionId { get; set; }
+        public int UsrQuestId { get; private set; }
+        public string AnswerText { get; set; }
+        public USER User { get; set;}
+        public int UserId { get; set; }
+        public QUESTION Question { get; set; }
+        public int QuestionId { get; set; }
 
         public USRQUEST()
         {
