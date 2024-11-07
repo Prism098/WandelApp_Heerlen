@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-public class Dijkstra
+﻿public class Dijkstra
 {
     public static List<int> FindShortestPath(int[,] graph, int startNode, int targetNode)
     {
@@ -22,18 +19,18 @@ public class Dijkstra
         // Itereer door de nodes om het korste pad te vinden
         for (int count = 0; count < numNodes - 1; count++)
         {
-            int u = MinDistanceNode(distances, visited, numNodes); // vind node met de korste afstand
-            if (u == -1 || distances[u] == int.MaxValue) break;    // stop als er geen bereikbare onbezochte nodes meer zijn
-            visited[u] = true; //Markeeer de node als bezocht
+            int m = MinDistanceNode(distances, visited, numNodes); // vind node met de korste afstand
+            if (m == -1 || distances[m] == int.MaxValue) break;    // stop als er geen bereikbare onbezochte nodes meer zijn
+            visited[m] = true; //Markeeer de node als bezocht
 
             // Update afstanden naar aangrenzende nodes
-            for (int v = 0; v < numNodes; v++)
+            for (int j = 0; j < numNodes; j++)
             {
-                if (!visited[v] && graph[u, v] != 0 && distances[u] != int.MaxValue &&
-                    distances[u] + graph[u, v] < distances[v])
+                if (!visited[j] && graph[m, j] != 0 && distances[m] != int.MaxValue &&
+                    distances[m] + graph[m, j] < distances[j])
                 {
-                    distances[v] = distances[u] + graph[u, v]; // update afstand naar node v
-                    previousNodes[v] = u;                      // houd vorige node Bij
+                    distances[j] = distances[m] + graph[m, j]; // update afstand naar node v
+                    previousNodes[j] = m;                      // houd vorige node Bij
                 }
             }
         }
