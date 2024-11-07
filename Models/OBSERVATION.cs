@@ -1,10 +1,6 @@
-﻿using ExotischNederlandKaasus.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ExotischNederlandKaasus.Models
 {
@@ -22,19 +18,17 @@ namespace ExotischNederlandKaasus.Models
         public SPECIE Specie { get; set; }
         public int SpecieId { get; set; }
 
-        public OBSERVATION()
+        public OBSERVATION(int observationid, DateTime dateoberserved, string observer, Blob picture, AREA area, int areaid, USER user, SPECIE specie, int specieid)
         {
-            
+            ObservationId = observationid;
+            DateObserved = dateoberserved;
+            Observer = observer;
+            Picture = picture;
+            Area = area;
+            AreaId = areaid;
+            User = user;
+            Specie = specie;
+            SpecieId = specieid;
         }
-
-        public List<OBSERVATION> AddObservation()
-        {
-            return SQLDAL.AddObservation(this);
-        }
-
-        //public List<OBSERVATION> AddObservation()
-        //{
-        //    return SQLDAL.AddObservation(this);
-        //}
     }
 }
