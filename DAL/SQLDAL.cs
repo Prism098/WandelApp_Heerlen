@@ -9,17 +9,15 @@ using ExotischNederlandKaasus.Models;
 
 namespace ExotischNederlandKaasus.DAL
 {
-    internal class SQLDAL
+    public class SQLDAL
     {
-        private static SQLDAL? instance;
+        private static SQLDAL instance;
         private SqlConnection connection;
         private string connectionString;
-        private List<ROLE> roles;
 
         private SQLDAL()
         {
-            roles = new List<ROLE>();
-            connectionString = "Data Source=.;Initial Catalog=EXOTISCHNEDERLAND; Trusted_Connection=True";
+            connectionString = "Data Source=.;Initial Catalog=EXOTISCHNEDERLAND;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
             // Create a new SqlConnection object
             connection = new SqlConnection(connectionString);
         }
@@ -36,107 +34,44 @@ namespace ExotischNederlandKaasus.DAL
             }
         }
 
-        // ROLE METHODS FOR DATABASE INTERACTIONS
-        public List<ROLE> AddOrUpdateRole(ROLE role)
+        private List<OBSERVATION> AddObservation(OBSERVATION observation)
         {
+            // Add vehicle to database
+
+            string query = "INSERT INTO OBSERVATION (DateObserved, Observer, Description, Picture, AreaId, UserId, SpecieId) " +
+                "VALUES (@DateObserved, @Observer, @Description, @Picture, @AreaId, @UserId, @SpecieId)";
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@DateObserved", observation.DateObserved);
+            command.Parameters.AddWithValue("@Observer", observation.Observer);
+            command.Parameters.AddWithValue("@Description", observation.Description);
+            command.Parameters.AddWithValue("@Picture", observation.Picture);
+            command.Parameters.AddWithValue("@AreaId", observation.AreaId);
+            command.Parameters.AddWithValue("@UserId", observation.UserId);
+            command.Parameters.AddWithValue("@SpecieId", observation.SpecieId);
+
             try
             {
                 connection.Open();
+                command.ExecuteNonQuery();
 
-                // Check if the role exists
-                string checkQuery = "SELECT COUNT(*) FROM ROLE WHERE Name = @Name";
-                SqlCommand checkCommand = new SqlCommand(checkQuery, connection);
-                checkCommand.Parameters.AddWithValue("@Name", role.Name);
-                int count = (int)checkCommand.ExecuteScalar();
-
-                SqlCommand command;
-
-                if (count > 0)
-                {
-                    // Update existing role
-                    command = new SqlCommand("UPDATE ROLE SET Description = @Description WHERE Name = @Name", connection);
-                }
-                else
-                {
-                    // Insert new role
-                    command = new SqlCommand("INSERT INTO ROLE (Name, Description) VALUES (@Name, @Description); SELECT CAST(scope_identity() AS INT)", connection);
-                }
-
-                command.Parameters.AddWithValue("@Name", role.Name);
-                command.Parameters.AddWithValue("@Description", role.Description);
-
-                // Auto increment the Role ID.
-                int roleId = (int)command.ExecuteScalar();
-                role.SetRoleId(roleId);
-
-                roles.Add(role);
+                // Retrieve the auto-incremented ID
+                command.CommandText = "SELECT CAST(scope_identity() AS INT)";
+                int addId = (int)command.ExecuteScalar();
+                observation.ObservationId(addId);
             }
-            // Catch exceptions
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding/updating the role.", ex);
+                // Handle exceptions (e.g., log the error)
+                throw new Exception("An error occurred while adding the observation.", ex);
             }
             finally
             {
                 connection.Close();
             }
 
-            return roles;
+            return observation;
         }
 
-
-        public List<ROLE> GetRoles()
-        {
-            try
-            {
-                string sql = "SELECT * FROM ROLE";
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            ROLE role = new ROLE(reader["Name"].ToString(), reader["Description"].ToString());
-                            role.SetRoleId((int)reader["RoleId"]);
-                            roles.Add(role);
-                        }
-                    }
-                }
-
-                connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-
-            return roles;
-        }
-
-        public void DeleteRole(int roleId)
-        {
-            try
-            {
-
-                string sql = "DELETE FROM ROLE WHERE RoleId=@RoleId";
-                connection.Open();
-
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@RoleId", roleId);
-                    command.ExecuteNonQuery();
-                }
-
-                connection.Close();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
 
     }
 }

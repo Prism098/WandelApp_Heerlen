@@ -27,6 +27,11 @@ namespace ExotischNederlandKaasus.Models
             
         }
 
+        public List<OBSERVATION> AddObservation()
+        {
+            return SQLDAL.AddObservation(this);
+        }
+
         //public List<OBSERVATION> AddObservation()
         //{
         //    return SQLDAL.AddObservation(this);
