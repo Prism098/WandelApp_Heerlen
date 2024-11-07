@@ -8,7 +8,7 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class POI
     {
-        private int POIId { get; set; }
+        public int POIId { get; private set; }
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
         public string? Description { get; set; }
