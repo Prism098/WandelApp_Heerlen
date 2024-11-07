@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 public class Dijkstra
 {
-    /// <summary>
-    /// Finds the shortest path between two nodes using Dijkstra's algorithm.
-    /// </summary>
-    /// <param name="graph">Adjacency matrix representing distances between nodes</param>
-    /// <param name="startNode">Index of the starting node</param>
-    /// <param name="targetNode">Index of the target node</param>
-    /// <returns>List of nodes representing the shortest path from startNode to targetNode</returns>
     public static List<int> FindShortestPath(int[,] graph, int startNode, int targetNode)
     {
         int numNodes = graph.GetLength(0);
