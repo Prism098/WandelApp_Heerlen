@@ -28,20 +28,20 @@ namespace ExotischNederlandKaasus.Models
             RoleId = id;
         }
 
-        // Method to set the SpecieId in the Specie Class
-        public List<ROLE> AddRole()
+        // Interaction with the database methods.
+        public List<ROLE> AddOrUpdateRole()
         {
-            return sqlDAL.AddRole(this);
+            return sqlDAL.AddOrUpdateRole(this);
         }
 
         public List<ROLE> GetRoles()
         {
-
+            return sqlDAL.GetRoles();
         }
 
         public void DeleteRole()
         {
-
+            sqlDAL.DeleteRole(this.RoleId);
         }
     }
 }

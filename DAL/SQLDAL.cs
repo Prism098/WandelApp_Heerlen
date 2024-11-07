@@ -37,38 +37,53 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // ROLE METHODS FOR DATABASE INTERACTIONS
-        public List<ROLE> AddRole(ROLE role)
+        public List<ROLE> AddOrUpdateRole(ROLE role)
         {
-            // Add role to database
-            string query = "INSERT INTO ROLE (Name, Description) " +
-                           "VALUES (@Name, @Description)";
-            SqlCommand command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@Name", role.Name);
-            command.Parameters.AddWithValue("@Description", role.Description);
-
             try
             {
                 connection.Open();
-                command.ExecuteNonQuery();
 
-                // Retrieve the auto-incremented ID
-                command.CommandText = "SELECT CAST(scope_identity() AS INT)";
-                int addId = (int)command.ExecuteScalar();
-                role.SetRoleId(addId); // Use the method to set the ID
+                // Check if the role exists
+                string checkQuery = "SELECT COUNT(*) FROM ROLE WHERE Name = @Name";
+                SqlCommand checkCommand = new SqlCommand(checkQuery, connection);
+                checkCommand.Parameters.AddWithValue("@Name", role.Name);
+                int count = (int)checkCommand.ExecuteScalar();
+
+                SqlCommand command;
+
+                if (count > 0)
+                {
+                    // Update existing role
+                    command = new SqlCommand("UPDATE ROLE SET Description = @Description WHERE Name = @Name", connection);
+                }
+                else
+                {
+                    // Insert new role
+                    command = new SqlCommand("INSERT INTO ROLE (Name, Description) VALUES (@Name, @Description); SELECT CAST(scope_identity() AS INT)", connection);
+                }
+
+                command.Parameters.AddWithValue("@Name", role.Name);
+                command.Parameters.AddWithValue("@Description", role.Description);
+
+                // Auto increment the Role ID.
+                int roleId = (int)command.ExecuteScalar();
+                role.SetRoleId(roleId);
+
+                roles.Add(role);
             }
+            // Catch exceptions
             catch (Exception ex)
             {
-                // Handle exceptions 
-                throw new Exception("An error occurred while adding the role.", ex);
+                throw new Exception("An error occurred while adding/updating the role.", ex);
             }
             finally
             {
                 connection.Close();
             }
 
-            roles.Add(role);
             return roles;
         }
+
 
         public List<ROLE> GetRoles()
         {
@@ -122,66 +137,6 @@ namespace ExotischNederlandKaasus.DAL
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
-
-
-
-
-        // SPECIE METHODS FOR DATABASE INTERACTIONS
-        //private SPECIE AddSpecie(SPECIE specie)
-        //{
-        //    // Add specie to database
-        //    string query = "INSERT INTO SPECIE (Name, InvasivenessLevel) " +
-        //        "VALUES (@Name, @InvasivenessLevel)";
-        //    SqlCommand command = new SqlCommand(query, connection);
-        //    command.Parameters.AddWithValue("@Name", specie.Name);
-        //    command.Parameters.AddWithValue("@InvasivenessLevel", specie.InvasivenessLevel);
-
-        //    try
-        //    {
-        //        connection.Open();
-        //        command.ExecuteNonQuery();
-
-        //        // Retrieve the auto-incremented ID
-        //        command.CommandText = "SELECT CAST(scope_identity() AS INT)";
-        //        int addId = (int)command.ExecuteScalar();
-        //        specie.SpecieId = addId;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exceptions 
-        //        throw new Exception("An error occurred while adding the specie.", ex);
-        //    }
-        //    finally
-        //    {
-        //        connection.Close();
-        //    }
-
-        //    return specie;
-        //}
-
-
-        //public void DeleteSpecie(int specieId)
-        //{
-        //    try
-        //    {
-
-        //        string sql = "DELETE FROM Player WHERE Id=@Id";
-        //        connection.Open();
-
-        //        using (SqlCommand command = new SqlCommand(sql, connection))
-        //        {
-        //            command.Parameters.AddWithValue("@Id", specieId);
-        //            command.ExecuteNonQuery();
-        //        }
-
-        //        connection.Close();
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("An error occurred: " + ex.Message);
-        //    }
-        //}
 
     }
 }
