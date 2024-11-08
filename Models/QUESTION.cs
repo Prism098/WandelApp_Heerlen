@@ -8,7 +8,7 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class QUESTION
     {
-        private int QuestionId { get; set; }
+        public int QuestionId { get; private set; } 
         public string QuestionText { get; set; }
         public GAME Game { get; set; }
         public int GameId { get; set; }

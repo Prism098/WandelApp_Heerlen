@@ -1,25 +1,24 @@
-﻿//using System;
-//using System.Collections.Generic;
-
+﻿using ExotischNederlandKaasus.Models;
 using ExotischNederlandKaasus.DAL;
-using ExotischNederlandKaasus.Models;
-using System.Collections.Generic;
 using System;
 
 class Program
 {
-
-
     static void Main(string[] args)
     {
         // Menu System
         bool exit = false;
+
+        ROUTEQUIZ routeQuiz = new ROUTEQUIZ();
+        routeQuiz.Questions = routeQuiz.GetQuestions();
+        routeQuiz.Answers = routeQuiz.GetAnswers();
+
         while (!exit)
         {
             Console.Clear(); // Clear the console screen
             Console.WriteLine("Menu:");
             Console.WriteLine("1. Calculate Route");
-            Console.WriteLine("2. Play Quizz");
+            Console.WriteLine("2. Play Quiz");
             Console.WriteLine("3. Manage Observervation");
             Console.WriteLine("4. Exit");
 
@@ -36,11 +35,13 @@ class Program
                     break;
 
                 case 2:
-                    // Call the Play Quizz function
-                    //PlayQuizz
-                    Console.WriteLine("Time to play a quizz");
+                    // Call the Play Quiz function
+                    
+                    Console.WriteLine("Time to play a Quiz!");
+                    PlayQuiz(routeQuiz);
                     Console.ReadLine();
                     break;
+
                 case 3:
                     // Call Observervation function
                     //Observation ADD()
@@ -50,11 +51,13 @@ class Program
                     Console.WriteLine("Time to manage your observations");
                     Console.ReadLine();
                     break;
+
                 case 4:
                     // Exit the program
                     exit = true;
                     Console.WriteLine("Exiting program...");
                     break;
+
                 default:
                     Console.WriteLine("Invalid choice, please try again.");
                     break;
@@ -62,7 +65,37 @@ class Program
         }
     }
 
-    // Method to calculate the route between two nodes
+    // Method to fetch a random question and check the answer
+    private static void PlayQuiz(ROUTEQUIZ routeQuiz)
+    {
+        var (questionText, correctAnswer) = routeQuiz.AskRandomQuestion(); // Var to get random question from questions
+
+        Console.WriteLine("Here's your question:");
+        Console.WriteLine(questionText);
+
+        Console.Write("Your answer:(TRUE/FALSE) ");
+        string userAnswer = Console.ReadLine()?.Trim().ToLower(); // normalize user input for user friendlyness
+
+        // Check gebruikers input met juiste antwoord 
+        if(correctAnswer == null)
+        {
+            Console.WriteLine("No correct answer found for this question.");
+        }
+        else if (userAnswer == correctAnswer?.ToLower())
+        {
+            Console.WriteLine("Correct!");
+        }
+        else
+        {
+            Console.WriteLine($"Incorrect! The correct answer is: {correctAnswer}");
+        }
+
+        Console.WriteLine("\nPress any key to return to the menu...");
+        Console.ReadKey();
+    }
+
+
+    //Methode om route tussen twee nodes te berekenen
     private static void CalculateRoute()
     {
         // een 15 x 15 matrix die de aftanden tussen de locaties voorstelt
@@ -148,7 +181,7 @@ class Program
         Console.ReadKey();
     }
 
-    // Method to get valid menu choice
+    // Methode voor switch case menu input
     private static int GetMenuChoice()
     {
         int choice;
@@ -163,7 +196,7 @@ class Program
     }
 
 
-    // Method to get valid node input
+    // metehode on een juiste gebruikers input te krijgen
     private static int GetNodeInput(int numLocations)
     {
         int node;

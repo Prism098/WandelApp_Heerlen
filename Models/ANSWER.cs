@@ -14,9 +14,11 @@ namespace ExotischNederlandKaasus.Models
         public QUESTION? Question { get; set; }
         public int QuestionId { get; set; }
 
-        public ANSWER(string answerText)
+        public ANSWER(int answerid ,string answerText, int questionID)
         {
+            AnswerId = answerid;
             AnswerText = answerText;
+            QuestionId = questionID;
         }
 
     }
