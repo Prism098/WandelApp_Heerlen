@@ -8,8 +8,8 @@ namespace ExotischNederlandKaasus.Database_test_script
 {
     internal class Test_script_ANSWER
     {
-        
-        //    static void Main(string[] args)
+
+        //static void Main(string[] args)
         //{
         //    SQLDAL sqlDAL = SQLDAL.Instance;
         //    bool continueProgram = true;
