@@ -151,5 +151,6 @@ class Program
             }
             Console.WriteLine("Invalid input. Please enter a valid location number:");
         }
+        
     }
 }
