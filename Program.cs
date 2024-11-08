@@ -4,6 +4,8 @@ using System;
 
 class Program
 {
+
+
     static void Main(string[] args)
     {
         // Menu System
@@ -57,7 +59,6 @@ class Program
                     exit = true;
                     Console.WriteLine("Exiting program...");
                     break;
-
                 default:
                     Console.WriteLine("Invalid choice, please try again.");
                     break;
