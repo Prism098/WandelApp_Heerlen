@@ -29,9 +29,9 @@ namespace ExotischNederlandKaasus.Models
                             while (reader.Read())
                             {
                                 string answerText = reader["AnswerText"]?.ToString() ?? string.Empty;
+                                int answerId = Convert.ToInt32(reader["AnswerId"]);
                                 int questionId = Convert.ToInt32(reader["QuestionId"]);
-                                ANSWER answer = new ANSWER(answerText, questionId);
-                                answer.SetAnswerId((int)reader["AnswerId"]);
+                                ANSWER answer = new ANSWER(answerId, answerText, questionId);
                                 answers.Add(answer);
                             }
                         }
