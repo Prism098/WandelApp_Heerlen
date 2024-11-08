@@ -1,8 +1,15 @@
-﻿using System;
+﻿//using System;
+//using System.Collections.Generic;
+
+using ExotischNederlandKaasus.DAL;
+using ExotischNederlandKaasus.Models;
 using System.Collections.Generic;
+using System;
 
 class Program
 {
+
+
     static void Main(string[] args)
     {
         // Menu System
@@ -12,7 +19,9 @@ class Program
             Console.Clear(); // Clear the console screen
             Console.WriteLine("Menu:");
             Console.WriteLine("1. Calculate Route");
-            Console.WriteLine("2. Exit");
+            Console.WriteLine("2. Play Quizz");
+            Console.WriteLine("3. Manage Observervation");
+            Console.WriteLine("4. Exit");
 
             // Ask for the user's choice
             Console.Write("\nEnter your choice: ");
@@ -27,11 +36,25 @@ class Program
                     break;
 
                 case 2:
+                    // Call the Play Quizz function
+                    //PlayQuizz
+                    Console.WriteLine("Time to play a quizz");
+                    Console.ReadLine();
+                    break;
+                case 3:
+                    // Call Observervation function
+                    //Observation ADD()
+                    //Observation DELETE()
+                    //Observation UPDATE()
+                    //Observation READ()
+                    Console.WriteLine("Time to manage your observations");
+                    Console.ReadLine();
+                    break;
+                case 4:
                     // Exit the program
                     exit = true;
                     Console.WriteLine("Exiting program...");
                     break;
-
                 default:
                     Console.WriteLine("Invalid choice, please try again.");
                     break;
@@ -45,42 +68,42 @@ class Program
         // een 15 x 15 matrix die de aftanden tussen de locaties voorstelt
         int[,] graph = new int[15, 15]
         {
-            { 0, 10, 10, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 10, 0, 3, 0, 0, 0, 0, 14, 0, 0, 0, 18, 0, 0, 0 },
-            { 10, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 12, 0, 3, 0, 10, 9, 10, 0, 0, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 10, 0, 4, 0, 0, 13, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 9, 4, 0, 3, 0, 13, 0, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 10, 0, 3, 0, 2, 14, 0, 0, 0, 0, 0, 0 },
-            { 0, 14, 0, 0, 0, 0, 2, 0, 0, 0, 1, 6, 0, 0, 0 },
-            { 0, 0, 0, 0, 13, 13, 14, 0, 0, 11, 0, 0, 0, 0, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 6, 0, 6, 6, 6 },
-            { 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 0, 6, 4, 0, 0 },
-            { 0, 18, 0, 0, 0, 0, 0, 6, 0, 0, 6, 0, 5, 9, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 4, 5, 0, 3, 0 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 9, 3, 0, 8 },
-            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 8, 0 }
+                { 0, 10, 10, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 10, 0, 3, 0, 0, 0, 0, 14, 0, 0, 0, 18, 0, 0, 0 },
+                { 10, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 12, 0, 3, 0, 10, 9, 10, 0, 0, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 10, 0, 4, 0, 0, 13, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 9, 4, 0, 3, 0, 13, 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 10, 0, 3, 0, 2, 14, 0, 0, 0, 0, 0, 0 },
+                { 0, 14, 0, 0, 0, 0, 2, 0, 0, 0, 1, 6, 0, 0, 0 },
+                { 0, 0, 0, 0, 13, 13, 14, 0, 0, 11, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 6, 0, 6, 6, 6 },
+                { 0, 0, 0, 0, 0, 0, 0, 1, 0, 6, 0, 6, 4, 0, 0 },
+                { 0, 18, 0, 0, 0, 0, 0, 6, 0, 0, 6, 0, 5, 9, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 4, 5, 0, 3, 0 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 9, 3, 0, 8 },
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 8, 0 }
         };
 
         // Defineer elke node met de gegeven naam van de locatie
         Dictionary<int, string> nodeNames = new Dictionary<int, string>
-        {
-            { 0, "Het Weerterbos" },
-            { 1, "Moeselpeel" },
-            { 2, "Roeventerpeel" },
-            { 3, "Natuurreservaat Wellensteijn" },
-            { 4, "Het Spaanse Bos" },
-            { 5, "Landgoed Beijlshof" },
-            { 6, "Landgoed Exaten" },
-            { 7, "De Tuspeel" },
-            { 8, "Beesels Broek" },
-            { 9, "Melickerheide" },
-            { 10, "Isabelle Griend en Oolder Griend" },
-            { 11, "Molengreend" },
-            { 12, "Linnerheide" },
-            { 13, "Het Munnichsbos" },
-            { 14, "Nationaal park de Meinweg" }
-        };
+            {
+                { 0, "Het Weerterbos" },
+                { 1, "Moeselpeel" },
+                { 2, "Roeventerpeel" },
+                { 3, "Natuurreservaat Wellensteijn" },
+                { 4, "Het Spaanse Bos" },
+                { 5, "Landgoed Beijlshof" },
+                { 6, "Landgoed Exaten" },
+                { 7, "De Tuspeel" },
+                { 8, "Beesels Broek" },
+                { 9, "Melickerheide" },
+                { 10, "Isabelle Griend en Oolder Griend" },
+                { 11, "Molengreend" },
+                { 12, "Linnerheide" },
+                { 13, "Het Munnichsbos" },
+                { 14, "Nationaal park de Meinweg" }
+            };
 
         // Geef de locaties weer voor de gebruiker
         Console.WriteLine("Available locations:");
@@ -131,13 +154,14 @@ class Program
         int choice;
         while (true)
         {
-            if (int.TryParse(Console.ReadLine(), out choice) && (choice == 1 || choice == 2))
+            if (int.TryParse(Console.ReadLine(), out choice) && (choice == 1 || choice == 2) || choice == 3 || choice == 4)
             {
                 return choice;
             }
-            Console.WriteLine("Invalid choice. Please enter 1 or 2.");
+            Console.WriteLine("Invalid choice. Please enter a valid menu option.");
         }
     }
+
 
     // Method to get valid node input
     private static int GetNodeInput(int numLocations)
@@ -151,6 +175,7 @@ class Program
             }
             Console.WriteLine("Invalid input. Please enter a valid location number:");
         }
-        
+
     }
 }
+
