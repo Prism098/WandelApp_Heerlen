@@ -9,16 +9,19 @@ namespace ExotischNederlandKaasus.DAL
         private SqlConnection connection;
         private string connectionString;
         private List<ROLE> roles;
-        private List<OBSERVATION> observations;
         private List<ANSWER> answers;
         private List<QUESTION> questions;
         private List<AREA> areas;
+        private List<GAME> games;
+
+        private List<OBSERVATION> observations;
         private SQLDAL()
         {
             answers = new List<ANSWER>();
             roles = new List<ROLE>();
             questions = new List<QUESTION>();
             areas = new List<AREA>();
+            games = new List<GAME>();
             connectionString = "Data Source=.;Initial Catalog=EXOTISCHNEDERLAND; Trusted_Connection=True";
             // Create a new SqlConnection object
             connection = new SqlConnection(connectionString);
@@ -275,7 +278,136 @@ namespace ExotischNederlandKaasus.DAL
             }
         }
 
+        // GAME METHODS FOR DATABASE INTERACTIONS
+        public bool AddGame(GAME game)
+        {
+            string checkQuery = "SELECT COUNT(1) FROM ROUTE WHERE RouteId = @RouteId";
+            SqlCommand checkCommand = new SqlCommand(checkQuery, connection);
+            checkCommand.Parameters.AddWithValue("@RouteId", game.RouteId);
+            try
+            {
+                connection.Open();
+                int count = (int)checkCommand.ExecuteScalar();
+                if (count == 0)
+                {
+                    // Provide more information about the failure, made a choice to fix this in the DB, we know we want.
+                    Console.WriteLine($"The provided RouteId '{game.RouteId}' does not exist in the database.");
+                    return false;
+                }
 
+                // Set the StartTime to DateTime.Now
+                game.StartTime = DateTime.Now;
+
+                // Proceed with inserting the game
+                string query = "INSERT INTO GAME (Name, StartTime, RouteId) VALUES (@Name, @StartTime, @RouteId)";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Name", game.Name);
+                command.Parameters.AddWithValue("@StartTime", game.StartTime);
+                command.Parameters.AddWithValue("@RouteId", game.RouteId);
+
+                command.ExecuteNonQuery();
+
+                // Retrieve the auto-incremented ID
+                command.CommandText = "SELECT CAST(scope_identity() AS INT)";
+                var result = command.ExecuteScalar();
+                if (result != DBNull.Value)
+                {
+                    int addId = (int)result;
+                    game.SetGameId(addId);
+                }
+                games.Add(game);
+                return true;
+            }
+            catch (KeyNotFoundException knfEx)
+            {
+                Console.WriteLine(knfEx.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while adding the game.", ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+        public void UpdateGame(GAME game)
+        {
+            string query = "UPDATE GAME SET Name = @Name, StartTime = @StartTime, RouteId = @RouteId, Points = @Points, EndTime = @EndTime WHERE GameId = @GameId";
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Name", game.Name);
+            command.Parameters.AddWithValue("@StartTime", game.StartTime);
+            command.Parameters.AddWithValue("@RouteId", game.RouteId);
+            command.Parameters.AddWithValue("@Points", game.Points.HasValue ? (object)game.Points.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@EndTime", game.EndTime.HasValue ? (object)game.EndTime.Value : DBNull.Value);
+            command.Parameters.AddWithValue("@GameId", game.GameId);
+            try
+            {
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the role.", ex);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+        public List<GAME> GetGames()
+        {
+            List<GAME> games = new List<GAME>(); // Initialize the list
+            try
+            {
+                string sql = "SELECT * FROM GAME";
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string name = reader["Name"]?.ToString() ?? string.Empty;
+                            DateTime startTime = Convert.ToDateTime(reader["StartTime"]);
+                            int routeId = Convert.ToInt32(reader["RouteId"]);
+                            GAME game = new GAME(name, startTime, routeId);
+                            game.SetGameId((int)reader["GameId"]);
+                            games.Add(game);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            return games;
+        }
+        public void DeleteGame(int gameId)
+        {
+            try
+            {
+                string sql = "DELETE FROM GAME WHERE GameId=@GameId";
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@gameId", gameId);
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
 
         // QUESTION METHODS FOR DATABASE INTERACTIONS
         public bool AddQuestion(QUESTION question)
