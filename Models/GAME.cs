@@ -19,11 +19,24 @@ namespace ExotischNederlandKaasus.Models
         public int RouteId { get; set; }
         public List<QUESTION> questions { get; set; } = new List<QUESTION>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
 
+        public GAME(int gameId, string name, DateTime startTime, int routeId, int? points)
+        {
+            GameId = gameId;
+            Name = name;
+            StartTime = startTime;
+            RouteId = routeId;
+            Points = points;
+        }
         public GAME(string name, DateTime startTime, int routeId)
         {
             Name = name;
             StartTime = startTime;
             RouteId = routeId;
+        }
+
+        public GAME()
+        {
+            
         }
 
         public GAME(string name, DateTime startTime, int routeId, int point)

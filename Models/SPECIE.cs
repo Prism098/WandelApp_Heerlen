@@ -9,78 +9,53 @@ namespace ExotischNederlandKaasus.Models
 {
     internal class SPECIE
     {
+        private SQLDAL sqlDAL = SQLDAL.Instance;
         public int SpecieId { get; private set; }
         public string Name { get; set; }
         public string? InvasivenessLevel { get; set; }
-        public List<OBSERVATION> Observations { get; set; }
+        public List<OBSERVATION> Observations { get; set; } = new List<OBSERVATION>();
 
         public SPECIE()
         {
-            
         }
-        // Method to set the SpecieId in the Specie Class
+
+        public SPECIE(string name, string? invasivenessLevel)
+        {
+            Name = name;
+            InvasivenessLevel = invasivenessLevel;
+        }
+
+        public SPECIE(int specieId, string name, string? invasivenessLevel)
+        {
+            SpecieId = specieId;
+            Name = name;
+            InvasivenessLevel = invasivenessLevel;
+        }
+
         public void SetSpecieId(int id)
         {
             SpecieId = id;
         }
 
+        // Interaction with the database methods.
+        public void AddSpecie()
+        {
+            sqlDAL.AddSpecie(this);
+        }
 
-        // SPECIE METHODS FOR DATABASE INTERACTIONS
-        //private SPECIE AddSpecie(SPECIE specie)
-        //{
-        //    // Add specie to database
-        //    string query = "INSERT INTO SPECIE (Name, InvasivenessLevel) " +
-        //        "VALUES (@Name, @InvasivenessLevel)";
-        //    SqlCommand command = new SqlCommand(query, connection);
-        //    command.Parameters.AddWithValue("@Name", specie.Name);
-        //    command.Parameters.AddWithValue("@InvasivenessLevel", specie.InvasivenessLevel);
+        public void UpdateSpecie(SPECIE specie)
+        {
+            sqlDAL.UpdateSpecie(specie);
+        }
 
-        //    try
-        //    {
-        //        connection.Open();
-        //        command.ExecuteNonQuery();
+        public List<SPECIE> GetSpecies()
+        {
+            return sqlDAL.GetSpecies();
+        }
 
-        //        // Retrieve the auto-incremented ID
-        //        command.CommandText = "SELECT CAST(scope_identity() AS INT)";
-        //        int addId = (int)command.ExecuteScalar();
-        //        specie.SpecieId = addId;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle exceptions 
-        //        throw new Exception("An error occurred while adding the specie.", ex);
-        //    }
-        //    finally
-        //    {
-        //        connection.Close();
-        //    }
-
-        //    return specie;
-        //}
-
-
-        //public void DeleteSpecie(int specieId)
-        //{
-        //    try
-        //    {
-
-        //        string sql = "DELETE FROM Player WHERE Id=@Id";
-        //        connection.Open();
-
-        //        using (SqlCommand command = new SqlCommand(sql, connection))
-        //        {
-        //            command.Parameters.AddWithValue("@Id", specieId);
-        //            command.ExecuteNonQuery();
-        //        }
-
-        //        connection.Close();
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("An error occurred: " + ex.Message);
-        //    }
-        //}
-
+        public void DeleteSpecie()
+        {
+            sqlDAL.DeleteSpecie(this.SpecieId);
+        }
     }
 }
