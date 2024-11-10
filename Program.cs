@@ -11,7 +11,7 @@ class Program
         // Menu System
         bool exit = false;
 
-        ROUTEQUIZ routeQuiz = new ROUTEQUIZ();
+        GAME routeQuiz = new GAME();
         routeQuiz.Questions = routeQuiz.GetQuestions();
         routeQuiz.Answers = routeQuiz.GetAnswers();
 
@@ -67,14 +67,14 @@ class Program
     }
 
     // Method to fetch a random question and check the answer
-    private static void PlayQuiz(ROUTEQUIZ routeQuiz)
+    private static void PlayQuiz(GAME routeQuiz)
     {
         var (questionText, correctAnswer) = routeQuiz.AskRandomQuestion(); // Var to get random question from questions
 
         Console.WriteLine("Here's your question:");
         Console.WriteLine(questionText);
 
-        Console.Write("Your answer:(TRUE/FALSE) ");
+        Console.Write("Your answer(TRUE/FALSE): ");
         string userAnswer = Console.ReadLine()?.Trim().ToLower(); // normalize user input for user friendlyness
 
         // Check gebruikers input met juiste antwoord 
