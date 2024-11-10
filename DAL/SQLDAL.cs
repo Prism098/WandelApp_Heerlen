@@ -8,7 +8,7 @@ namespace ExotischNederlandKaasus.DAL
     {
         private static SQLDAL? instance;
 
-        private SqlConnection connection;
+        private readonly SqlConnection connection;
         private string connectionString;
 
         private List<ROLE> roles;
@@ -500,7 +500,7 @@ namespace ExotischNederlandKaasus.DAL
         }
         public List<OBSERVATION> GetObservations()
         {
-            List<OBSERVATION> observations = new List<OBSERVATION>(); // Initialize the list
+            List<OBSERVATION> observations = new List<OBSERVATION>();
             try
             {
                 string sql = "SELECT * FROM OBSERVATION";
@@ -511,13 +511,14 @@ namespace ExotischNederlandKaasus.DAL
                     {
                         while (reader.Read())
                         {
-                            int observationId = Convert.ToInt32(reader["ObservationId"]);
-                            DateTime dateObserved = Convert.ToDateTime(reader["DateObserved"]);
+                            int observationId = (int)reader["ObservationId"];
+                            DateTime dateObserved = (DateTime)reader["DateObserved"];
                             string observer = reader["Observer"]?.ToString() ?? string.Empty;
-                            string? description = reader["Description"]?.ToString();
-                            int areaId = Convert.ToInt32(reader["AreaId"]);
-                            int userId = Convert.ToInt32(reader["UserId"]);
-                            int specieId = Convert.ToInt32(reader["SpecieId"]);
+                            string description = reader["Description"]?.ToString() ?? string.Empty;
+                            int areaId = (int)reader["AreaId"];
+                            int userId = (int)reader["UserId"];
+                            int specieId = (int)reader["SpecieId"];
+
                             OBSERVATION observation = new OBSERVATION(observationId, dateObserved, observer, description, areaId, userId, specieId);
                             observations.Add(observation);
                         }
@@ -753,7 +754,7 @@ namespace ExotischNederlandKaasus.DAL
         }
         public List<QUESTION> GetQuestions()
         {
-            List<QUESTION> questions = new List<QUESTION>(); // Initialize the list
+            List<QUESTION> questions = new List<QUESTION>();
             try
             {
                 string sql = "SELECT * FROM QUESTION";
@@ -871,11 +872,10 @@ namespace ExotischNederlandKaasus.DAL
                     {
                         while (reader.Read())
                         {
-                            ROLE role = new ROLE(
+                            string name = reader["Name"]?.ToString() ?? string.Empty;
+                            string description = reader["Description"]?.ToString() ?? string.Empty;
 
-                                reader["Name"].ToString(),
-                                reader["Description"].ToString());
-
+                            ROLE role = new ROLE(name, description);
                             role.SetRoleId((int)reader["RoleId"]);
                             roles.Add(role);
                         }
@@ -991,7 +991,7 @@ namespace ExotischNederlandKaasus.DAL
                                 (int)reader["Length"],
                                 (decimal)reader["Longitude"],
                                 (decimal)reader["Latitude"],
-                                reader["Type"].ToString(),
+                                reader["Type"]?.ToString() ?? string.Empty,
                                 (int)reader["AreaId"]);
 
                             routes.Add(route);
@@ -1200,17 +1200,15 @@ namespace ExotischNederlandKaasus.DAL
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            SPECIE specie = new SPECIE(
-                                (int)reader["SpecieId"],
-                                (string)reader["Name"],
-                                reader["InvasivenessLevel"] as string);
+                        SPECIE specie = new SPECIE(
+                            (int)reader["SpecieId"],
+                            (string)reader["Name"],
+                            reader["InvasivenessLevel"] as string);
 
-                            species.Add(specie);
-                        }
+                        species.Add(specie);
                     }
                 }
                 connection.Close();
@@ -1442,12 +1440,12 @@ namespace ExotischNederlandKaasus.DAL
                     {
                         while (reader.Read())
                         {
-                            USRQUEST usrQuest = new USRQUEST(
-                                (int)reader["UsrQuestId"],
-                                reader["AnswerText"] as string,
-                                (int)reader["UserId"],
-                                (int)reader["QuestionId"]);
+                            int usrQuestId = (int)reader["UsrQuestId"];
+                            string answerText = reader["AnswerText"]?.ToString() ?? string.Empty;
+                            int userId = (int)reader["UserId"];
+                            int questionId = (int)reader["QuestionId"];
 
+                            USRQUEST usrQuest = new USRQUEST(usrQuestId, answerText, userId, questionId);
                             usrQuests.Add(usrQuest);
                         }
                     }

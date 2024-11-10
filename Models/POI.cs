@@ -1,9 +1,4 @@
 ﻿using ExotischNederlandKaasus.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExotischNederlandKaasus.Models
 {
@@ -14,14 +9,16 @@ namespace ExotischNederlandKaasus.Models
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
         public string? Description { get; set; }
-        public string Type { get; set; }
-        public ROUTEPOINT RoutePoint { get; set; }
+        public string Type { get; set; } = string.Empty; // Initialize with a default value, making sure it is never null
+        public ROUTEPOINT? RoutePoint { get; set; } // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
         public int RoutePointId { get; set; }
+
+
+        //Constructors that are being used to make database calls
         public POI()
         {
             
         }
-
         public POI(decimal longitude, decimal latitude, string description, string type, int routePointId)
         {
             Longitude = longitude;
@@ -44,7 +41,8 @@ namespace ExotischNederlandKaasus.Models
         public void SetPOIId(int id)
         {
             POIId = id;
-        }
+        }        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+ 
         // Interaction with the database methods.
         public void AddPOI()
         {

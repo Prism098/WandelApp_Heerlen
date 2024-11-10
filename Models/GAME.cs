@@ -1,9 +1,4 @@
 ﻿using ExotischNederlandKaasus.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExotischNederlandKaasus.Models
 {
@@ -17,8 +12,9 @@ namespace ExotischNederlandKaasus.Models
         public int? Points { get; set; }
         public ROUTE? Route { get; set; }
         public int RouteId { get; set; }
-        public List<QUESTION> questions { get; set; } = new List<QUESTION>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
+        public List<QUESTION> questions { get; set; } = new List<QUESTION>();  // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
 
+        //Constructors that are being used to make database calls
         public GAME(int gameId, string name, DateTime startTime, int routeId, int? points)
         {
             GameId = gameId;
@@ -34,23 +30,11 @@ namespace ExotischNederlandKaasus.Models
             RouteId = routeId;
         }
 
-        public GAME()
-        {
-            
-        }
-
-        public GAME(string name, DateTime startTime, int routeId, int point)
-        {
-            Name = name;
-            StartTime = startTime;
-            RouteId = routeId;
-            Points = point;
-        }
-
         public void SetGameId(int id)
         {
             GameId = id;
-        }
+        }         // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+ 
         // Interaction with the database methods.
         public void AddGame()
         {

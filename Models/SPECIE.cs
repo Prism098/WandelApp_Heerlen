@@ -1,9 +1,4 @@
 ﻿using ExotischNederlandKaasus.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExotischNederlandKaasus.Models
 {
@@ -13,18 +8,14 @@ namespace ExotischNederlandKaasus.Models
         public int SpecieId { get; private set; }
         public string Name { get; set; }
         public string? InvasivenessLevel { get; set; }
-        public List<OBSERVATION> Observations { get; set; } = new List<OBSERVATION>();
+        public List<OBSERVATION> Observations { get; set; } = new List<OBSERVATION>(); // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
 
-        public SPECIE()
-        {
-        }
-
+        //Constructors that are being used to make database calls
         public SPECIE(string name, string? invasivenessLevel)
         {
             Name = name;
             InvasivenessLevel = invasivenessLevel;
         }
-
         public SPECIE(int specieId, string name, string? invasivenessLevel)
         {
             SpecieId = specieId;
@@ -35,24 +26,21 @@ namespace ExotischNederlandKaasus.Models
         public void SetSpecieId(int id)
         {
             SpecieId = id;
-        }
+        }         // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
         // Interaction with the database methods.
         public void AddSpecie()
         {
             sqlDAL.AddSpecie(this);
         }
-
         public void UpdateSpecie(SPECIE specie)
         {
             sqlDAL.UpdateSpecie(specie);
         }
-
         public List<SPECIE> GetSpecies()
         {
             return sqlDAL.GetSpecies();
         }
-
         public void DeleteSpecie()
         {
             sqlDAL.DeleteSpecie(this.SpecieId);

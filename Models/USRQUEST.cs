@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExotischNederlandKaasus.Models
+﻿namespace ExotischNederlandKaasus.Models
 {
     using global::ExotischNederlandKaasus.DAL;
     using System;
@@ -17,11 +11,12 @@ namespace ExotischNederlandKaasus.Models
             private SQLDAL sqlDAL = SQLDAL.Instance;
             public int UsrQuestId { get; private set; }
             public string AnswerText { get; set; }
-            public USER User { get; set; }
+            public USER? User { get; set; } // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
             public int UserId { get; set; }
-            public QUESTION Question { get; set; }
+            public QUESTION? Question { get; set; } // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
             public int QuestionId { get; set; }
 
+            //Constructors that are being used to make database calls
             public USRQUEST(int usrQuestId, string answerText, int userId, int questionId)
             {
                 UsrQuestId = usrQuestId;
@@ -29,12 +24,6 @@ namespace ExotischNederlandKaasus.Models
                 UserId = userId;
                 QuestionId = questionId;
             }
-
-            public USRQUEST()
-            {
-                
-            }
-
             public USRQUEST(string answerText, int userId, int questionId)
             {
                 AnswerText = answerText;
@@ -45,24 +34,21 @@ namespace ExotischNederlandKaasus.Models
             public void SetUsrQuestId(int id)
             {
                 UsrQuestId = id;
-            }
+            } // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
             // Interaction with the database methods.
             public void AddUsrQuest()
             {
                 sqlDAL.AddUsrQuest(this);
             }
-
             public void UpdateUsrQuest(USRQUEST usrQuest)
             {
                 sqlDAL.UpdateUsrQuest(usrQuest);
             }
-
             public List<USRQUEST> GetUsrQuests()
             {
                 return sqlDAL.GetUsrQuests();
             }
-
             public void DeleteUsrQuest()
             {
                 sqlDAL.DeleteUsrQuest(this.UsrQuestId);

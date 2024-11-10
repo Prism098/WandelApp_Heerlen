@@ -1,9 +1,4 @@
 ﻿using ExotischNederlandKaasus.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExotischNederlandKaasus.Models
 {
@@ -15,15 +10,13 @@ namespace ExotischNederlandKaasus.Models
         public decimal Longitude { get; set; }
         public decimal Latitude { get; set; }
         public string Type { get; set; }
-        public AREA Area { get; set; }
+        public AREA ?Area { get; set; } // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
         public int AreaId { get; set; }
-        public List<USER> Users { get; set; } = new List<USER>();
-        public List<GAME> Games { get; set; } = new List<GAME>();
-        public List<ROUTEPOINT> RoutePoints { get; set; } = new List<ROUTEPOINT>();
+        public List<USER> Users { get; set; } = new List<USER>(); // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
+        public List<GAME> Games { get; set; } = new List<GAME>(); // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
+        public List<ROUTEPOINT> RoutePoints { get; set; } = new List<ROUTEPOINT>(); // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
 
-        public ROUTE()
-        {
-        }
+        //Constructors that are being used to make database calls
         public ROUTE(int length, decimal longitude, decimal latitude, string type, int areaId)
         {
             Length = length;
@@ -45,7 +38,8 @@ namespace ExotischNederlandKaasus.Models
         public void SetRouteId(int id)
         {
             RouteId = id;
-        }
+        }        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
         public void AddRoute()
         {

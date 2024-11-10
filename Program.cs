@@ -315,7 +315,7 @@ bool HandleSpecieActions(int actionChoice)
 }
 bool HandleUserActions(int actionChoice)
 {
-    USER userInstance = new USER("DefaultName", "DefaultDescription", 0, 0); // Create an instance of USER with default values
+    USER userInstance = new USER("DefaultName", "DefaultDescription", 0, 0); 
 
     switch (actionChoice)
     {
@@ -394,15 +394,33 @@ string ReadAnswers(ANSWER answerInstance)
 }
 string UpdateAnswer(ANSWER answerInstance)
 {
+    var answers = answerInstance.GetAnswers();
+    if (answers == null)
+    {
+        return "No answers available.";
+    }
+
     Console.WriteLine(ReadAnswers(answerInstance));
     Console.WriteLine("Enter the AnswerId of the answer you want to update:");
-    if (int.TryParse(Console.ReadLine(), out int answerIdToUpdate))
+    string? input = Console.ReadLine();
+    if (input == null)
     {
-        ANSWER answerToUpdate = answerInstance.GetAnswers().Find(a => a.AnswerId == answerIdToUpdate);
+        return "No input provided.";
+    }
+
+    if (int.TryParse(input, out int answerIdToUpdate))
+    {
+        ANSWER? answerToUpdate = answers.Find(a => a.AnswerId == answerIdToUpdate);
         if (answerToUpdate != null)
         {
             Console.WriteLine("Enter the new text of the answer:");
-            answerToUpdate.AnswerText = Console.ReadLine();
+            string? newText = Console.ReadLine();
+            if (newText == null)
+            {
+                return "No new text provided.";
+            }
+
+            answerToUpdate.AnswerText = newText;
             answerToUpdate.UpdateAnswer(answerToUpdate);
             return "Answer updated successfully.";
         }
@@ -522,7 +540,7 @@ string DeleteArea(AREA areaInstance)
 string AddGame()
 {
     Console.WriteLine("Enter the name of the new game:");
-    string ?name = Console.ReadLine();
+    string? name = Console.ReadLine();
     DateTime startTime = DateTime.Now; // Set the start time to the current date and time, inserting the datetime by the user has no value for the application.
     Console.WriteLine("Enter the route ID for the new game:");
     if (int.TryParse(Console.ReadLine(), out int routeId))
@@ -607,9 +625,9 @@ string AddObservation()
 {
     DateTime dateObserved = DateTime.Now; 
     Console.WriteLine("Enter the observer's name:");
-    string ?observer = Console.ReadLine();
+    string? observer = Console.ReadLine();
     Console.WriteLine("Enter the description of the observation:");
-    string ?description = Console.ReadLine();
+    string? description = Console.ReadLine();
     Console.WriteLine("Enter the area ID for the observation:");
     if (int.TryParse(Console.ReadLine(), out int areaId))
     {
@@ -832,7 +850,7 @@ string AddQuestion()
     if (int.TryParse(Console.ReadLine(), out int gameId))
     {
         QUESTION newQuestion = new QUESTION(questionText, gameId);
-        SQLDAL.Instance.AddQuestion(newQuestion);
+        newQuestion.AddQuestion();
         return "Question added successfully.";
     }
     else
@@ -905,7 +923,7 @@ string AddRole()
     Console.WriteLine("Enter the description of the new role:");
     string roleDescription = Console.ReadLine();
     ROLE newRole = new ROLE(roleName, roleDescription);
-    SQLDAL.Instance.AddRole(newRole);
+    newRole.AddRole();
     return "Role added successfully.";
 }
 string ReadRoles(ROLE roleInstance)
@@ -967,6 +985,7 @@ string DeleteRole(ROLE roleInstance)
         return "Invalid RoleId entered.";
     }
 }
+
 string AddRoute()
 {
     Console.WriteLine("Enter the length of the new route:");
@@ -984,7 +1003,7 @@ string AddRoute()
                 if (int.TryParse(Console.ReadLine(), out int areaId))
                 {
                     ROUTE newRoute = new ROUTE(length, longitude, latitude, type, areaId);
-                    SQLDAL.Instance.AddRoute(newRoute);
+                    newRoute.AddRoute();
                     return "Route added successfully.";
                 }
                 else
@@ -1223,7 +1242,7 @@ string ReadSpecies(SPECIE specieInstance)
     result.AppendLine("All species:");
     foreach (SPECIE specie in species)
     {
-        result.AppendLine($"SpecieId: {specie.SpecieId}, Name: {specie.Name}, InvasivenessLevel: {specie.InvasivenessLevel}");
+        result.AppendLine($"SpecieId: {specie.SpecieId}, Name: {specie.Name}, InvasivenessLevel: {specie.InvasivenessLevel}, Route");
     }
     return result.ToString();
 }
@@ -1500,5 +1519,3 @@ string DeleteUsrQuest(USRQUEST usrQuestInstance)
         return "Invalid UsrQuestId entered.";
     }
 }
-
-
