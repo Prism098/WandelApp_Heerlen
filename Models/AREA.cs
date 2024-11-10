@@ -1,9 +1,4 @@
 ﻿using ExotischNederlandKaasus.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExotischNederlandKaasus.Models
 {
@@ -15,9 +10,10 @@ namespace ExotischNederlandKaasus.Models
         public string Name { get; set; }
         public string Region { get; set; }
         public string? Type { get; set; }
-        public List<ROUTE> Routes { get; set; } = new List<ROUTE>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
-        public List<OBSERVATION> Oberservations { get; set; } = new List<OBSERVATION>(); // Initializing the List of users in the property declaration to make sure it's never null! This way i do not have to check for null before accessing the list!
+        public List<ROUTE> Routes { get; set; } = new List<ROUTE>();  // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
+        public List<OBSERVATION> Oberservations { get; set; } = new List<OBSERVATION>();  // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
 
+        //Constructors that are being used to make database calls
         public AREA(string owner, string name, string region, string type)
         {
             Owner = owner;
@@ -26,26 +22,44 @@ namespace ExotischNederlandKaasus.Models
             Type = type;
         }
 
-        public void SetAreaId(int id)
+        public bool SetAreaId(int id)
         {
             AreaId = id;
-        }
+            return true;
+        } // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
-        public void AddArea()
+        public bool AddArea()
         {
-            sqlDAL.AddArea(this);
+            return sqlDAL.AddArea(this);
         }
-        public void UpdateArea(AREA area)
+        public bool UpdateArea(AREA area)
         {
-            sqlDAL.UpdateArea(area);
+            try
+            {
+                sqlDAL.UpdateArea(area);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public List<AREA> GetAreas()
         {
             return sqlDAL.GetAreas();
         }
-        public void DeleteAreas()
+        public bool DeleteArea()
         {
-            sqlDAL.DeleteArea(this.AreaId);
+            try
+            {
+                sqlDAL.DeleteArea(this.AreaId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
