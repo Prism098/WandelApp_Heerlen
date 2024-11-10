@@ -66,23 +66,5 @@ namespace ExotischNederlandKaasus.Models
         {
             return sqlDAL.DeleteGame(this.GameId);
         }
-
-        // Randomizer questions
-        public (string QuestionText, string? CorrectAnswer) AskRandomQuestion()
-        {
-            if (questions == null || questions.Count == 0)
-            {
-                return ("No questions available.", null);
-            }
-
-            Random rand = new Random();
-            var randomQuestion = questions[rand.Next(questions.Count)];
-
-            var correctAnswer = Answers
-                .Where(a => a.QuestionId == randomQuestion.QuestionId)
-                .FirstOrDefault()?.AnswerText;
-
-            return (randomQuestion.QuestionText, correctAnswer);
-        }
     }
 }

@@ -36,7 +36,7 @@ namespace ExotischNederlandKaasus.Models
         public void SetUserId(int id)
         {
             UserId = id;
-        }       // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+        }   // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
         // Interaction with the database methods.
         public bool AddUser()
