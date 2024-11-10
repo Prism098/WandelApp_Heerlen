@@ -67,33 +67,51 @@ class Program
     }
 
     // Method to fetch a random question and check the answer
-    private static void PlayQuiz(GAME routeQuiz)
+    private static string PlayQuiz(GAME routeQuiz)
     {
-        var (questionText, correctAnswer) = routeQuiz.AskRandomQuestion(); // Var to get random question from questions
+        bool keepPlaying = true; //Bool om te checken of de gebruiker wil blijven spelen
 
-        Console.WriteLine("Here's your question:");
-        Console.WriteLine(questionText);
+        while (keepPlaying) // Loop om de quiz te blijven spelen totdat de gebruiker stopt
+        {
+            var (questionText, correctAnswer) = routeQuiz.AskRandomQuestion(); // Variabele om random vraag op te halen uit de db
 
-        Console.Write("Your answer(TRUE/FALSE): ");
-        string userAnswer = Console.ReadLine()?.Trim().ToLower(); // normalize user input for user friendlyness
+            Console.WriteLine("Here's your question:");
+            Console.WriteLine(questionText);
 
-        // Check gebruikers input met juiste antwoord 
-        if(correctAnswer == null)
-        {
-            Console.WriteLine("No correct answer found for this question.");
-        }
-        else if (userAnswer == correctAnswer?.ToLower())
-        {
-            Console.WriteLine("Correct!");
-        }
-        else
-        {
-            Console.WriteLine($"Incorrect! The correct answer is: {correctAnswer}");
+            Console.Write("Your answer (TRUE/FALSE): ");
+            string userAnswer = Console.ReadLine()?.Trim().ToLower(); // Pak de user input naar lower case om type fouten te vermijden
+
+            // check antwoord gegeven door gebruiker met de juiste antwoord van de db
+            if (correctAnswer == null)
+            {
+                Console.WriteLine("No correct answer found for this question.");
+            }
+            else if (userAnswer == correctAnswer?.ToLower())
+            {
+                Console.WriteLine("Correct!");
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect! The correct answer is: {correctAnswer}");
+            }
+
+            Console.Write("\nContinue playing? Type 'stop' to quit, or press Enter to continue: ");
+            string continuePlaying = Console.ReadLine()?.Trim().ToLower();
+
+            // if statement om uit de quiz te gaan
+            if (continuePlaying == "stop")
+            {
+                keepPlaying = false;
+                Console.WriteLine("See you next time!");
+       
+            }
         }
 
         Console.WriteLine("\nPress any key to return to the menu...");
         Console.ReadKey();
+        return ""; //Return empty string omdat het geen void methode is , maar een string moet returnen
     }
+
 
 
     //Methode om route tussen twee nodes te berekenen
@@ -116,7 +134,7 @@ class Program
                 { 0, 18, 0, 0, 0, 0, 0, 6, 0, 0, 6, 0, 5, 9, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 4, 5, 0, 3, 0 },
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 9, 3, 0, 8 },
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 8, 0 }
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 8, 0 } //15 nodes , waarbij de index 0-14 de locaties voorstellen en de afstand hier tussen
         };
 
         // Defineer elke node met de gegeven naam van de locatie
@@ -180,6 +198,7 @@ class Program
         // Wait for user input before returning to the menu
         Console.WriteLine("\nPress any key to return to the menu...");
         Console.ReadKey();
+
     }
 
     // Methode voor switch case menu input
