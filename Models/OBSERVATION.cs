@@ -32,27 +32,31 @@ namespace ExotischNederlandKaasus.Models
             SpecieId = specieId;
         }
 
-        public void SetObservationId(int id)
+        public bool SetObservationId(int id)
         {
             ObservationId = id;
-        }        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+            return true;
+        } // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
         // Interaction with the database methods.
-        public void AddObservation()
+        public bool AddObservation()
         {
-            sqlDAL.AddObservation(this);
+            return sqlDAL.AddObservation(this);
         }
-        public void UpdateObservation(OBSERVATION observation)
+
+        public bool UpdateObservation(OBSERVATION observation)
         {
-            sqlDAL.UpdateObservation(observation);
+            return sqlDAL.UpdateObservation(observation);
         }
+
         public List<OBSERVATION> GetObservation()
         {
             return sqlDAL.GetObservations();
         }
-        public void DeleteObservation()
+
+        public bool DeleteObservation()
         {
-            sqlDAL.DeleteObservation(this.ObservationId);
+            return sqlDAL.DeleteObservation(this.ObservationId);
         }
     }
 }

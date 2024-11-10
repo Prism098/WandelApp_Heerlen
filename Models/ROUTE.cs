@@ -41,21 +41,21 @@ namespace ExotischNederlandKaasus.Models
         }        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
         // Interaction with the database methods.
-        public void AddRoute()
+        public bool AddRoute()
         {
-            sqlDAL.AddRoute(this);
+            return sqlDAL.AddRoute(this);
         }
-        public void UpdateRoute(ROUTE route)
+        public bool UpdateRoute(ROUTE route)
         {
-            sqlDAL.UpdateRoute(route);
+            return sqlDAL.UpdateRoute(route);
         }
         public List<ROUTE> GetRoutes()
         {
             return sqlDAL.GetRoutes();
         }
-        public void DeleteRoute()
+        public bool DeleteRoute()
         {
-            sqlDAL.DeleteRoute(this.RouteId);
+            return sqlDAL.DeleteRoute(this.RouteId);
         }
     }
 }

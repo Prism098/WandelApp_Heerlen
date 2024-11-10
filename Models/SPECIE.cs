@@ -29,21 +29,21 @@ namespace ExotischNederlandKaasus.Models
         }         // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
         // Interaction with the database methods.
-        public void AddSpecie()
+        public bool AddSpecie()
         {
-            sqlDAL.AddSpecie(this);
+            return sqlDAL.AddSpecie(this);
         }
-        public void UpdateSpecie(SPECIE specie)
+        public bool UpdateSpecie(SPECIE specie)
         {
-            sqlDAL.UpdateSpecie(specie);
+            return sqlDAL.UpdateSpecie(specie);
         }
         public List<SPECIE> GetSpecies()
         {
             return sqlDAL.GetSpecies();
         }
-        public void DeleteSpecie()
+        public bool DeleteSpecie()
         {
-            sqlDAL.DeleteSpecie(this.SpecieId);
+            return sqlDAL.DeleteSpecie(this.SpecieId);
         }
     }
 }

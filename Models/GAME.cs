@@ -30,27 +30,28 @@ namespace ExotischNederlandKaasus.Models
             RouteId = routeId;
         }
 
-        public void SetGameId(int id)
+        public bool SetGameId(int id)
         {
             GameId = id;
-        }         // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
- 
+            return true;
+        }// Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
-        public void AddGame()
+        public bool AddGame()
         {
-            sqlDAL.AddGame(this);
+            return sqlDAL.AddGame(this);
         }
-        public void UpdateGame(GAME game)
+        public bool UpdateGame(GAME game)
         {
-            sqlDAL.UpdateGame(game);
+            return sqlDAL.UpdateGame(game);
         }
         public List<GAME> GetGames()
         {
             return sqlDAL.GetGames();
         }
-        public void DeleteGame()
+        public bool DeleteGame()
         {
-            sqlDAL.DeleteGame(this.GameId);
+            return sqlDAL.DeleteGame(this.GameId);
         }
 
     }

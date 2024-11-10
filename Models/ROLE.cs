@@ -23,21 +23,21 @@ namespace ExotischNederlandKaasus.Models
         }
 
         // Interaction with the database methods.
-        public void AddRole()
+        public bool AddRole()
         {
-            sqlDAL.AddRole(this);
+            return sqlDAL.AddRole(this);
         }
-        public void UpdateRole(ROLE role)
+        public bool UpdateRole(ROLE role)
         {
-            sqlDAL.UpdateRole(role);
+            return sqlDAL.UpdateRole(role);
         }
         public List<ROLE> GetRoles()
         {
             return sqlDAL.GetRoles();
         }
-        public void DeleteRole()
+        public bool DeleteRole()
         {
-            sqlDAL.DeleteRole(this.RoleId);
+            return sqlDAL.DeleteRole(this.RoleId);
         }
     }
 }

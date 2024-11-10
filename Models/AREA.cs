@@ -22,26 +22,44 @@ namespace ExotischNederlandKaasus.Models
             Type = type;
         }
 
-        public void SetAreaId(int id)
+        public bool SetAreaId(int id)
         {
             AreaId = id;
-        }         // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+            return true;
+        } // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
-        public void AddArea()
+        public bool AddArea()
         {
-            sqlDAL.AddArea(this);
+            return sqlDAL.AddArea(this);
         }
-        public void UpdateArea(AREA area)
+        public bool UpdateArea(AREA area)
         {
-            sqlDAL.UpdateArea(area);
+            try
+            {
+                sqlDAL.UpdateArea(area);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public List<AREA> GetAreas()
         {
             return sqlDAL.GetAreas();
         }
-        public void DeleteAreas()
+        public bool DeleteArea()
         {
-            sqlDAL.DeleteArea(this.AreaId);
+            try
+            {
+                sqlDAL.DeleteArea(this.AreaId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

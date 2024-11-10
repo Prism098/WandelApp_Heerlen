@@ -1,4 +1,11 @@
-﻿//do
+﻿using ExotischNederlandKaasus.DAL;
+using ExotischNederlandKaasus.Models.ExotischNederlandKaasus.Models;
+using ExotischNederlandKaasus.Models;
+using System.Text;
+
+//bool continueProgram = true;
+
+//do
 //{
 //    Console.WriteLine("Select the model you want to interact with:");
 //    Console.WriteLine("+----+----------------+----+----------------+----+----------------+");
@@ -20,7 +27,7 @@
 //            break;
 //        }
 
-//    Console.WriteLine("Select the action you want to perform:");
+//        Console.WriteLine("Select the action you want to perform:");
 //        Console.WriteLine("1. Add");
 //        Console.WriteLine("2. Read");
 //        Console.WriteLine("3. Update");
@@ -29,17 +36,17 @@
 //        if (int.TryParse(Console.ReadLine(), out int actionChoice))
 //        {
 //            continueProgram = HandleUserChoice(entityChoice, actionChoice);
-//}
+//        }
 //        else
-//{
-//    Console.WriteLine("Invalid input. Please enter a number.");
-//}
+//        {
+//            Console.WriteLine("Invalid input. Please enter a number.");
+//        }
 //    }
 //    else
-//{
-//    Console.WriteLine("Invalid input. Please enter a number.");
-//}
-//} while (continueProgram) ;
+//    {
+//        Console.WriteLine("Invalid input. Please enter a number.");
+//    }
+//} while (continueProgram);
 //// Handle the choice of the user, whenever he chooses what entity he wants to adjust he will fall in this switch case, this switch case refers to another switch case.
 //bool HandleUserChoice(int entityChoice, int actionChoice)
 //{
@@ -387,15 +394,33 @@
 //}
 //string UpdateAnswer(ANSWER answerInstance)
 //{
+//    var answers = answerInstance.GetAnswers();
+//    if (answers == null)
+//    {
+//        return "No answers available.";
+//    }
+
 //    Console.WriteLine(ReadAnswers(answerInstance));
 //    Console.WriteLine("Enter the AnswerId of the answer you want to update:");
-//    if (int.TryParse(Console.ReadLine(), out int answerIdToUpdate))
+//    string? input = Console.ReadLine();
+//    if (input == null)
 //    {
-//        ANSWER answerToUpdate = answerInstance.GetAnswers().Find(a => a.AnswerId == answerIdToUpdate);
+//        return "No input provided.";
+//    }
+
+//    if (int.TryParse(input, out int answerIdToUpdate))
+//    {
+//        ANSWER? answerToUpdate = answers.Find(a => a.AnswerId == answerIdToUpdate);
 //        if (answerToUpdate != null)
 //        {
 //            Console.WriteLine("Enter the new text of the answer:");
-//            answerToUpdate.AnswerText = Console.ReadLine();
+//            string? newText = Console.ReadLine();
+//            if (newText == null)
+//            {
+//                return "No new text provided.";
+//            }
+
+//            answerToUpdate.AnswerText = newText;
 //            answerToUpdate.UpdateAnswer(answerToUpdate);
 //            return "Answer updated successfully.";
 //        }
@@ -491,15 +516,27 @@
 //}
 //string DeleteArea(AREA areaInstance)
 //{
+//    // Display the list of areas
 //    Console.WriteLine(ReadAreas(areaInstance));
+
+//    // Prompt the user to enter the AreaId of the area to delete
 //    Console.WriteLine("Enter the AreaId of the area you want to delete:");
 //    if (int.TryParse(Console.ReadLine(), out int areaIdToDelete))
 //    {
+//        // Find the area to delete
 //        AREA areaToDelete = areaInstance.GetAreas().Find(a => a.AreaId == areaIdToDelete);
 //        if (areaToDelete != null)
 //        {
-//            areaToDelete.DeleteAreas();
-//            return "Area deleted successfully.";
+//            // Delete the area
+//            bool isDeleted = SQLDAL.Instance.DeleteArea(areaIdToDelete);
+//            if (isDeleted)
+//            {
+//                return "Area deleted successfully.";
+//            }
+//            else
+//            {
+//                return "Area could not be deleted.";
+//            }
 //        }
 //        else
 //        {
@@ -825,7 +862,7 @@
 //    if (int.TryParse(Console.ReadLine(), out int gameId))
 //    {
 //        QUESTION newQuestion = new QUESTION(questionText, gameId);
-//        SQLDAL.Instance.AddQuestion(newQuestion);
+//        newQuestion.AddQuestion();
 //        return "Question added successfully.";
 //    }
 //    else
@@ -898,7 +935,7 @@
 //    Console.WriteLine("Enter the description of the new role:");
 //    string roleDescription = Console.ReadLine();
 //    ROLE newRole = new ROLE(roleName, roleDescription);
-//    SQLDAL.Instance.AddRole(newRole);
+//    newRole.AddRole();
 //    return "Role added successfully.";
 //}
 //string ReadRoles(ROLE roleInstance)
@@ -960,6 +997,7 @@
 //        return "Invalid RoleId entered.";
 //    }
 //}
+
 //string AddRoute()
 //{
 //    Console.WriteLine("Enter the length of the new route:");
@@ -977,7 +1015,7 @@
 //                if (int.TryParse(Console.ReadLine(), out int areaId))
 //                {
 //                    ROUTE newRoute = new ROUTE(length, longitude, latitude, type, areaId);
-//                    SQLDAL.Instance.AddRoute(newRoute);
+//                    newRoute.AddRoute();
 //                    return "Route added successfully.";
 //                }
 //                else
@@ -1216,7 +1254,7 @@
 //    result.AppendLine("All species:");
 //    foreach (SPECIE specie in species)
 //    {
-//        result.AppendLine($"SpecieId: {specie.SpecieId}, Name: {specie.Name}, InvasivenessLevel: {specie.InvasivenessLevel}");
+//        result.AppendLine($"SpecieId: {specie.SpecieId}, Name: {specie.Name}, InvasivenessLevel: {specie.InvasivenessLevel}, Route");
 //    }
 //    return result.ToString();
 //}
@@ -1491,7 +1529,5 @@
 //    else
 //    {
 //        return "Invalid UsrQuestId entered.";
-//    }
-//}
 //    }
 //}

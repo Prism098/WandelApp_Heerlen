@@ -37,21 +37,21 @@
             } // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
 
             // Interaction with the database methods.
-            public void AddUsrQuest()
+            public bool AddUsrQuest()
             {
-                sqlDAL.AddUsrQuest(this);
+                return sqlDAL.AddUsrQuest(this);
             }
-            public void UpdateUsrQuest(USRQUEST usrQuest)
+            public bool UpdateUsrQuest(USRQUEST usrQuest)
             {
-                sqlDAL.UpdateUsrQuest(usrQuest);
+                return sqlDAL.UpdateUsrQuest(usrQuest);
             }
             public List<USRQUEST> GetUsrQuests()
             {
                 return sqlDAL.GetUsrQuests();
             }
-            public void DeleteUsrQuest()
+            public bool DeleteUsrQuest()
             {
-                sqlDAL.DeleteUsrQuest(this.UsrQuestId);
+                return sqlDAL.DeleteUsrQuest(this.UsrQuestId);
             }
         }
     }

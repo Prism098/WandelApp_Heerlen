@@ -18,27 +18,28 @@ namespace ExotischNederlandKaasus.Models
             GameId = gameId;
         }
 
-        public void SetQuestionId(int id)
+        public bool SetQuestionId(int id)
         {
             QuestionId = id;
-        }        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
-        
+            return true; // Assuming setting the ID is always successful
+        }// Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
-        public void AddQuestion()
+        public bool AddQuestion()
         {
-            sqlDAL.AddQuestion(this);
+            return sqlDAL.AddQuestion(this);
         }
-        public void UpdateQuestion(QUESTION question)
+        public bool UpdateQuestion(QUESTION question)
         {
-            sqlDAL.UpdateQuestion(question);
+            return sqlDAL.UpdateQuestion(question);
         }
         public List<QUESTION> GetQuestions()
         {
             return sqlDAL.GetQuestions();
         }
-        public void DeleteQuestion()
+        public bool DeleteQuestion()
         {
-            sqlDAL.DeleteQuestion(this.QuestionId);
+            return sqlDAL.DeleteQuestion(this.QuestionId);
         }
     }
 }

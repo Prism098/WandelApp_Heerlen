@@ -33,24 +33,21 @@ namespace ExotischNederlandKaasus.Models
         }         // Method for auto incrementing the ID ( Must be auto inc. due to database restrictions )
 
         // Interaction with the database methods.
-        public void AddRoutePoint()
+        public bool AddRoutePoint()
         {
-            sqlDAL.AddRoutePoint(this);
+            return sqlDAL.AddRoutePoint(this);
         }
-
-        public void UpdateRoutePoint(ROUTEPOINT routePoint)
+        public bool UpdateRoutePoint(ROUTEPOINT routePoint)
         {
-            sqlDAL.UpdateRoutePoint(routePoint);
+            return sqlDAL.UpdateRoutePoint(routePoint);
         }
-
         public List<ROUTEPOINT> GetRoutePoints()
         {
             return sqlDAL.GetRoutePoints();
         }
-
-        public void DeleteRoutePoint()
+        public bool DeleteRoutePoint()
         {
-            sqlDAL.DeleteRoutePoint(this.RoutePointId);
+            return sqlDAL.DeleteRoutePoint(this.RoutePointId);
         }
     }
 }

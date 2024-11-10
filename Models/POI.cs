@@ -38,27 +38,31 @@ namespace ExotischNederlandKaasus.Models
             RoutePointId = routePointId;
         }
 
-        public void SetPOIId(int id)
+        public bool SetPOIId(int id)
         {
             POIId = id;
-        }        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
- 
+            return true; // Assuming setting the ID is always successful
+        }// Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
-        public void AddPOI()
+        public bool AddPOI()
         {
-            sqlDAL.AddPOI(this);
+            return sqlDAL.AddPOI(this);
         }
-        public void UpdatePOI(POI poi)
+
+        public bool UpdatePOI(POI poi)
         {
-            sqlDAL.UpdatePOI(poi);
+            return sqlDAL.UpdatePOI(poi);
         }
+
         public List<POI> GetPOI()
         {
             return sqlDAL.GetPOI();
         }
-        public void DeletePOI()
+
+        public bool DeletePOI()
         {
-            sqlDAL.DeletePOI(this.POIId);
+            return sqlDAL.DeletePOI(this.POIId);
         }
     }
 }

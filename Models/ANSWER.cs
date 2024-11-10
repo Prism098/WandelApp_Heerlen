@@ -20,23 +20,40 @@ namespace ExotischNederlandKaasus.Models
         public void SetAnswerId(int id)
         {
             AnswerId = id;
-        }         // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+        } // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
+
         // Interaction with the database methods.
-        public void AddAnswer()
+        public bool AddAnswer()
         {
-            sqlDAL.AddAnswer(this);
+            return sqlDAL.AddAnswer(this);
         }
-        public void UpdateAnswer(ANSWER answer)
+        public bool UpdateAnswer(ANSWER answer)
         {
-            sqlDAL.UpdateAnswer(answer);
+            try
+            {
+                sqlDAL.UpdateAnswer(answer);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public List<ANSWER> GetAnswers()
         {
             return sqlDAL.GetAnswers();
         }
-        public void DeleteAnswer()
+        public bool DeleteAnswer()
         {
-            sqlDAL.DeleteAnswer(this.AnswerId);
+            try
+            {
+                sqlDAL.DeleteAnswer(this.AnswerId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

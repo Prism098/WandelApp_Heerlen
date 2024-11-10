@@ -51,18 +51,19 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // ANSWER METHODS FOR DATABASE INTERACTIONS
-        public void AddAnswer(ANSWER answer)
+        public bool AddAnswer(ANSWER answer) // in this method we tried checking for database constraint in the DAL. There is also a couple of functions where we don't check this on the backend. Wasn't as succesfull as we hoped.
         {
+            // Query checks by counting the elements in the database if there is a questionId.
             string checkQuery = "SELECT COUNT(1) FROM QUESTION WHERE QuestionId = @QuestionId";
             SqlCommand checkCommand = new SqlCommand(checkQuery, connection);
             checkCommand.Parameters.AddWithValue("@QuestionId", answer.QuestionId);
             try
             {
+                // Make a check if the question ID exists in the database
                 connection.Open();
                 int count = (int)checkCommand.ExecuteScalar();
                 if (count == 0)
                 {
-                    // Provide more information about the failure
                     throw new KeyNotFoundException($"The provided QuestionId '{answer.QuestionId}' does not exist in the database.");
                 }
 
@@ -83,23 +84,24 @@ namespace ExotischNederlandKaasus.DAL
                     answer.SetAnswerId(addId);
                 }
                 answers.Add(answer);
+                return true;
             }
             catch (KeyNotFoundException knfEx)
             {
-                // Handle known exception type specifically
                 Console.WriteLine(knfEx.Message);
-                throw;
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the answer.", ex);
+                Console.WriteLine("An error occurred while adding the answer: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateAnswer(ANSWER answer)
+        public bool UpdateAnswer(ANSWER answer)
         {
             string query = "UPDATE ANSWER SET AnswerText = @AnswerText, QuestionId = @QuestionId WHERE AnswerId = @AnswerId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -110,10 +112,11 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the role.", ex);
+                throw new Exception("An error occurred while updating the answer.", ex);
             }
             finally
             {
@@ -153,7 +156,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return answers;
         }
-        public void DeleteAnswer(int answerId)
+        public bool DeleteAnswer(int answerId)
         {
             try
             {
@@ -165,10 +168,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -177,7 +182,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // AREA METHODS FOR DATABASE INTERACTIONS
-        public void AddArea(AREA area)
+        public bool AddArea(AREA area)
         {
             string query = "INSERT INTO AREA (Owner, Name, Region, Type) VALUES (@Owner, @Name, @Region, @Type)";
             SqlCommand command = new SqlCommand(query, connection);
@@ -201,19 +206,20 @@ namespace ExotischNederlandKaasus.DAL
                 }
 
                 areas.Add(area);
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the role.", ex);
+                throw new Exception("An error occurred while adding the area.", ex);
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateArea(AREA area)
+        public bool UpdateArea(AREA area)
         {
-            string query = "UPDATE AREA SET Owner = @Owner, Name = @Name, Region = @Region, Type = @Type WHERE AreaId = @AreaId ";
+            string query = "UPDATE AREA SET Owner = @Owner, Name = @Name, Region = @Region, Type = @Type WHERE AreaId = @AreaId";
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@Owner", area.Owner);
             command.Parameters.AddWithValue("@Name", area.Name);
@@ -224,11 +230,12 @@ namespace ExotischNederlandKaasus.DAL
             try
             {
                 connection.Open();
-                command.ExecuteNonQuery();
+                int rowsAffected = command.ExecuteNonQuery();
+                return rowsAffected > 0;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the role.", ex);
+                throw new Exception("An error occurred while updating the area.", ex);
             }
             finally
             {
@@ -270,22 +277,23 @@ namespace ExotischNederlandKaasus.DAL
             }
             return areas;
         }
-        public void DeleteArea(int areaId)
+        public bool DeleteArea(int areaId)
         {
+            string sql = "DELETE FROM AREA WHERE AreaId=@AreaId";
             try
             {
-                string sql = "DELETE FROM AREA WHERE AreaId=@AreaId";
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@AreaId", areaId);
-                    command.ExecuteNonQuery();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
                 }
-                connection.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -305,15 +313,12 @@ namespace ExotischNederlandKaasus.DAL
                 int count = (int)checkCommand.ExecuteScalar();
                 if (count == 0)
                 {
-                    // Provide more information about the failure, made a choice to fix this in the DB, we know we want.
                     Console.WriteLine($"The provided RouteId '{game.RouteId}' does not exist in the database.");
                     return false;
                 }
 
-                // Set the StartTime to DateTime.Now
                 game.StartTime = DateTime.Now;
 
-                // Proceed with inserting the game
                 string query = "INSERT INTO GAME (Name, StartTime, RouteId) VALUES (@Name, @StartTime, @RouteId)";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Name", game.Name);
@@ -322,7 +327,6 @@ namespace ExotischNederlandKaasus.DAL
 
                 command.ExecuteNonQuery();
 
-                // Retrieve the auto-incremented ID
                 command.CommandText = "SELECT CAST(scope_identity() AS INT)";
                 var result = command.ExecuteScalar();
                 if (result != DBNull.Value)
@@ -336,18 +340,19 @@ namespace ExotischNederlandKaasus.DAL
             catch (KeyNotFoundException knfEx)
             {
                 Console.WriteLine(knfEx.Message);
-                throw;
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the game.", ex);
+                Console.WriteLine("An error occurred while adding the game: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateGame(GAME game)
+        public bool UpdateGame(GAME game)
         {
             string query = "UPDATE GAME SET Name = @Name, StartTime = @StartTime, RouteId = @RouteId, Points = @Points, EndTime = @EndTime WHERE GameId = @GameId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -361,10 +366,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the role.", ex);
+                Console.WriteLine("An error occurred while updating the game: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -405,7 +412,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return games;
         }
-        public void DeleteGame(int gameId)
+        public bool DeleteGame(int gameId)
         {
             try
             {
@@ -414,13 +421,14 @@ namespace ExotischNederlandKaasus.DAL
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@gameId", gameId);
-                    command.ExecuteNonQuery();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
                 }
-                connection.Close();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -468,12 +476,17 @@ namespace ExotischNederlandKaasus.DAL
                 observations.Add(observation);
                 return true;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred while adding the observation: " + ex.Message);
+                return false;
+            }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateObservation(OBSERVATION observation)
+        public bool UpdateObservation(OBSERVATION observation)
         {
             string query = "UPDATE OBSERVATION SET DateObserved = @DateObserved, Observer = @Observer, Description = @Description, AreaId = @AreaId, UserId = @UserId, SpecieId = @SpecieId WHERE ObservationId = @ObservationId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -488,10 +501,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the observation.", ex);
+                Console.WriteLine("An error occurred while updating the observation: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -532,7 +547,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return observations;
         }
-        public void DeleteObservation(int observationId)
+        public bool DeleteObservation(int observationId)
         {
             try
             {
@@ -544,10 +559,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -598,7 +615,7 @@ namespace ExotischNederlandKaasus.DAL
                 connection.Close();
             }
         }
-        public void UpdatePOI(POI poi)
+        public bool UpdatePOI(POI poi)
         {
             string query = "UPDATE POI SET Longitude = @Longitude, Latitude = @Latitude, Description = @Description, Type = @Type, RoutePointId = @RoutePointId WHERE POIId = @POIId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -612,10 +629,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the POI.", ex);
+                Console.WriteLine("An error occurred while updating the POI: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -658,8 +677,8 @@ namespace ExotischNederlandKaasus.DAL
                 connection.Close();
             }
             return pois;
-        }                           
-        public void DeletePOI(int poiId)
+        }
+        public bool DeletePOI(int poiId)
         {
             try
             {
@@ -668,12 +687,14 @@ namespace ExotischNederlandKaasus.DAL
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@POIId", poiId);
-                    command.ExecuteNonQuery();
+                    int rowsAffected = command.ExecuteNonQuery();
+                    return rowsAffected > 0;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -731,7 +752,7 @@ namespace ExotischNederlandKaasus.DAL
                 connection.Close();
             }
         }
-        public void UpdateQuestion(QUESTION question)
+        public bool UpdateQuestion(QUESTION question)
         {
             string query = "UPDATE QUESTION SET QuestionText = @QuestionText, GameId = @GameId WHERE QuestionId = @QuestionId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -742,10 +763,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the role.", ex);
+                Console.WriteLine("An error occurred while updating the question: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -782,7 +805,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return questions;
         }
-        public void DeleteQuestion(int questionId)
+        public bool DeleteQuestion(int questionId)
         {
             try
             {
@@ -794,10 +817,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -806,7 +831,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // ROLE METHODS FOR DATABASE INTERACTIONS
-        public void AddRole(ROLE role)
+        public bool AddRole(ROLE role)
         {
             string query = "INSERT INTO ROLE (Name, Description) VALUES (@Name, @Description)";
             SqlCommand command = new SqlCommand(query, connection);
@@ -828,17 +853,19 @@ namespace ExotischNederlandKaasus.DAL
                 }
 
                 roles.Add(role);
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the role.", ex);
+                Console.WriteLine("An error occurred while adding the role: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateRole(ROLE role)
+        public bool UpdateRole(ROLE role)
         {
             string query = "UPDATE ROLE SET Name = @Name, Description = @Description WHERE RoleId = @RoleId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -850,10 +877,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the role.", ex);
+                Console.WriteLine("An error occurred while updating the role: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -889,7 +918,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return roles;
         }
-        public void DeleteRole(int roleId)
+        public bool DeleteRole(int roleId)
         {
             try
             {
@@ -901,10 +930,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -913,7 +944,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // ROUTE METHOD FOR DATABASE INTERACTIONS
-        public void AddRoute(ROUTE route)
+        public bool AddRoute(ROUTE route)
         {
             string query = "INSERT INTO ROUTE (Length, Longitude, Latitude, Type, AreaId) VALUES (@Length, @Longitude, @Latitude, @Type, @AreaId)";
             SqlCommand command = new SqlCommand(query, connection);
@@ -938,17 +969,19 @@ namespace ExotischNederlandKaasus.DAL
                 }
 
                 routes.Add(route);
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the route.", ex);
+                Console.WriteLine("An error occurred while adding the route: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateRoute(ROUTE route)
+        public bool UpdateRoute(ROUTE route)
         {
             string query = "UPDATE ROUTE SET Length = @Length, Longitude = @Longitude, Latitude = @Latitude, Type = @Type, AreaId = @AreaId WHERE RouteId = @RouteId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -963,10 +996,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the route.", ex);
+                Console.WriteLine("An error occurred while updating the route: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1006,7 +1041,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return routes;
         }
-        public void DeleteRoute(int routeId)
+        public bool DeleteRoute(int routeId)
         {
             try
             {
@@ -1018,10 +1053,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1030,7 +1067,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // ROUTEPOINT METHODS FOR DATABASE INTERACTION 
-        public void AddRoutePoint(ROUTEPOINT routePoint)
+        public bool AddRoutePoint(ROUTEPOINT routePoint)
         {
             string query = "INSERT INTO ROUTEPOINT (Longitude, Latitude, SequenceNumber) VALUES (@Longitude, @Latitude, @SequenceNumber)";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1051,17 +1088,19 @@ namespace ExotischNederlandKaasus.DAL
                     int addId = (int)result;
                     routePoint.SetRoutePointId(addId);
                 }
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the route point.", ex);
+                Console.WriteLine("An error occurred while adding the route point: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateRoutePoint(ROUTEPOINT routePoint)
+        public bool UpdateRoutePoint(ROUTEPOINT routePoint)
         {
             string query = "UPDATE ROUTEPOINT SET Longitude = @Longitude, Latitude = @Latitude, SequenceNumber = @SequenceNumber WHERE RoutePointId = @RoutePointId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1074,10 +1113,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the route point.", ex);
+                Console.WriteLine("An error occurred while updating the route point: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1115,7 +1156,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return routePoints;
         }
-        public void DeleteRoutePoint(int routePointId)
+        public bool DeleteRoutePoint(int routePointId)
         {
             try
             {
@@ -1127,10 +1168,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("An error occurred while deleting the route point: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1139,7 +1182,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // SPECIE METHODS FOR DATABASE INTERACTIONS
-        public void AddSpecie(SPECIE specie)
+        public bool AddSpecie(SPECIE specie)
         {
             string query = "INSERT INTO SPECIE (Name, InvasivenessLevel) VALUES (@Name, @InvasivenessLevel)";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1159,17 +1202,19 @@ namespace ExotischNederlandKaasus.DAL
                     int addId = (int)result;
                     specie.SetSpecieId(addId);
                 }
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the specie.", ex);
+                Console.WriteLine("An error occurred while adding the specie: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateSpecie(SPECIE specie)
+        public bool UpdateSpecie(SPECIE specie)
         {
             string query = "UPDATE SPECIE SET Name = @Name, InvasivenessLevel = @InvasivenessLevel WHERE SpecieId = @SpecieId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1181,10 +1226,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the specie.", ex);
+                Console.WriteLine("An error occurred while updating the specie: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1219,7 +1266,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return species;
         }
-        public void DeleteSpecie(int specieId)
+        public bool DeleteSpecie(int specieId)
         {
             try
             {
@@ -1231,10 +1278,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("An error occurred while deleting the specie: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1243,7 +1292,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // USER METHODS FOR DATABASE INTERACTIONS
-        public void AddUser(USER user)
+        public bool AddUser(USER user)
         {
             string checkQuery = "SELECT COUNT(1) FROM ROUTE WHERE RouteId = @RouteId";
             SqlCommand checkCommand = new SqlCommand(checkQuery, connection);
@@ -1277,23 +1326,25 @@ namespace ExotischNederlandKaasus.DAL
                     user.SetUserId(addId);
                 }
                 users.Add(user);
+                return true;
             }
             catch (KeyNotFoundException knfEx)
             {
                 // Handle known exception type specifically
                 Console.WriteLine(knfEx.Message);
-                throw;
+                return false;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the user.", ex);
+                Console.WriteLine("An error occurred while adding the user: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateUser(USER user)
+        public bool UpdateUser(USER user)
         {
             string query = "UPDATE [USER] SET Name = @Name, Description = @Description, Role = @Role, Experience = @Experience, RouteId = @RouteId WHERE UserId = @UserId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1307,10 +1358,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the user.", ex);
+                Console.WriteLine("An error occurred while updating the user: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1350,7 +1403,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return users;
         }
-        public void DeleteUser(int userId)
+        public bool DeleteUser(int userId)
         {
             try
             {
@@ -1362,10 +1415,12 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1374,7 +1429,7 @@ namespace ExotischNederlandKaasus.DAL
         }
 
         // USERGAME METHODS FOR DATABASE INTERACTIONS
-        public void AddUsrQuest(USRQUEST usrQuest)
+        public bool AddUsrQuest(USRQUEST usrQuest)
         {
             string query = "INSERT INTO USRQUEST (AnswerText, UserId, QuestionId) VALUES (@AnswerText, @UserId, @QuestionId)";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1395,17 +1450,19 @@ namespace ExotischNederlandKaasus.DAL
                     int addId = (int)result;
                     usrQuest.SetUsrQuestId(addId);
                 }
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the usrQuest.", ex);
+                Console.WriteLine("An error occurred while adding the usrQuest: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
             }
         }
-        public void UpdateUsrQuest(USRQUEST usrQuest)
+        public bool UpdateUsrQuest(USRQUEST usrQuest)
         {
             string query = "UPDATE USRQUEST SET AnswerText = @AnswerText, UserId = @UserId, QuestionId = @QuestionId WHERE UsrQuestId = @UsrQuestId";
             SqlCommand command = new SqlCommand(query, connection);
@@ -1417,10 +1474,12 @@ namespace ExotischNederlandKaasus.DAL
             {
                 connection.Open();
                 command.ExecuteNonQuery();
+                return true;
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while updating the usrQuest.", ex);
+                Console.WriteLine("An error occurred while updating the usrQuest: " + ex.Message);
+                return false;
             }
             finally
             {
@@ -1458,7 +1517,7 @@ namespace ExotischNederlandKaasus.DAL
             }
             return usrQuests;
         }
-        public void DeleteUsrQuest(int usrQuestId)
+        public bool DeleteUsrQuest(int usrQuestId)
         {
             try
             {
@@ -1470,15 +1529,16 @@ namespace ExotischNederlandKaasus.DAL
                     command.ExecuteNonQuery();
                 }
                 connection.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
+                return false;
             }
             finally
             {
                 connection.Close();
-
             }
         }
     }
