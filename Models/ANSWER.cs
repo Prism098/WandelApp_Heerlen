@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using ExotischNederlandKaasus.DAL;
 
 namespace ExotischNederlandKaasus.Models
 {
     internal class ANSWER
     {
+        private SQLDAL sqlDAL = SQLDAL.Instance;
         public int AnswerId { get; private set; }
         public string AnswerText { get; set; }
         public QUESTION? Question { get; set; }  // Not being used by program but was here to visualize the relationship between the two classes. Used to adding these for EF.
@@ -17,9 +13,18 @@ namespace ExotischNederlandKaasus.Models
         //Constructors that are being used to make database calls
         public ANSWER(string answerText, int questionId)
         {
-            AnswerId = answerid;
             AnswerText = answerText;
-            QuestionId = questionID;
+            QuestionId = questionId;
+        }
+        public ANSWER(int answerId, string answerText, int questionId)
+        {
+            AnswerId = answerId;
+            AnswerText = answerText;
+            QuestionId = questionId;
+        }
+        public ANSWER()
+        {
+            
         }
 
         public void SetAnswerId(int id)

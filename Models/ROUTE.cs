@@ -58,6 +58,8 @@ namespace ExotischNederlandKaasus.Models
             return sqlDAL.DeleteRoute(this.RouteId);
         }
 
+
+        // Dijkstra implementation !
         public static List<int> FindShortestPath(int[,] graph, int startNode, int targetNode)
         {
             int numNodes = graph.GetLength(0);

@@ -17,6 +17,8 @@ namespace ExotischNederlandKaasus.Models
             Name = name;
             Users = new List<USER>();
         }
+
+
         public void SetRoleId(int id)        // Method for auto incrementing the ID ( Must be auto inc due to database restrictions )
         {
             RoleId = id;

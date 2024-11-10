@@ -37,7 +37,7 @@ namespace ExotischNederlandKaasus.DAL
             // Create a new SqlConnection object
             connection = new SqlConnection(connectionString);
         }
-        // Singleton pattern, only one instance of this class can exist at any given time. 
+        // Singleton pattern, only one instance of this class can exist at any given time. We didn't always use it in our application though, but it's a good practice to use it and we are glad we know about it for future projects.
         public static SQLDAL Instance
         {
             get
@@ -1330,7 +1330,6 @@ namespace ExotischNederlandKaasus.DAL
             }
             catch (KeyNotFoundException knfEx)
             {
-                // Handle known exception type specifically
                 Console.WriteLine(knfEx.Message);
                 return false;
             }

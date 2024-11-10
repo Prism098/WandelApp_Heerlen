@@ -15,10 +15,6 @@ namespace ExotischNederlandKaasus.Models
 
 
         //Constructors that are being used to make database calls
-        public POI()
-        {
-            
-        }
         public POI(decimal longitude, decimal latitude, string description, string type, int routePointId)
         {
             Longitude = longitude;
@@ -27,7 +23,6 @@ namespace ExotischNederlandKaasus.Models
             Type = type;
             RoutePointId = routePointId;
         }
-
         public POI(int poiId, decimal longitude, decimal latitude, string description, string type, int routePointId)
         {
             POIId = poiId;
@@ -49,17 +44,14 @@ namespace ExotischNederlandKaasus.Models
         {
             return sqlDAL.AddPOI(this);
         }
-
         public bool UpdatePOI(POI poi)
         {
             return sqlDAL.UpdatePOI(poi);
         }
-
         public List<POI> GetPOI()
         {
             return sqlDAL.GetPOI();
         }
-
         public bool DeletePOI()
         {
             return sqlDAL.DeletePOI(this.POIId);

@@ -32,6 +32,7 @@ namespace ExotischNederlandKaasus.Models
             SpecieId = specieId;
         }
 
+
         public bool SetObservationId(int id)
         {
             ObservationId = id;
@@ -43,17 +44,14 @@ namespace ExotischNederlandKaasus.Models
         {
             return sqlDAL.AddObservation(this);
         }
-
         public bool UpdateObservation(OBSERVATION observation)
         {
             return sqlDAL.UpdateObservation(observation);
         }
-
         public List<OBSERVATION> GetObservation()
         {
             return sqlDAL.GetObservations();
         }
-
         public bool DeleteObservation()
         {
             return sqlDAL.DeleteObservation(this.ObservationId);

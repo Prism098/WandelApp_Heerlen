@@ -22,6 +22,8 @@ namespace ExotischNederlandKaasus.Models
             Type = type;
         }
 
+
+
         public bool SetAreaId(int id)
         {
             AreaId = id;
