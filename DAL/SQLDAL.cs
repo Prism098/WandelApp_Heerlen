@@ -9,13 +9,16 @@ namespace ExotischNederlandKaasus.DAL
         private SqlConnection connection;
         private string connectionString;
         private List<ROLE> roles;
+<<<<<<< HEAD
         private List<OBSERVATION> observations;
         private List<ANSWER> answers;
         private List<QUESTION> questions;
         private List<AREA> areas;
+=======
+        private List<OBSERVATION> Observation;
+>>>>>>> dc12d0ebeafb51765c6f2e3273a9da850a8e6acd
         private SQLDAL()
         {
-            answers = new List<ANSWER>();
             roles = new List<ROLE>();
             questions = new List<QUESTION>();
             areas = new List<AREA>();
@@ -36,6 +39,7 @@ namespace ExotischNederlandKaasus.DAL
             }
         }
 
+<<<<<<< HEAD
         // ANSWER METHODS FOR DATABASE INTERACTIONS
         public void AddAnswer(ANSWER answer)
         {
@@ -401,10 +405,14 @@ namespace ExotischNederlandKaasus.DAL
             }
         }
 
+=======
+>>>>>>> dc12d0ebeafb51765c6f2e3273a9da850a8e6acd
         // ROLE METHODS FOR DATABASE INTERACTIONS
-        public void AddRole(ROLE role)
+        public List<ROLE> AddOrUpdateRole(ROLE role)
         {
-            string query = "INSERT INTO ROLE (Name, Description) VALUES (@Name, @Description)";
+            // Add role to database
+            string query = "INSERT INTO ROLE (Name, Description) " +
+                           "VALUES (@Name, @Description)";
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@Name", role.Name);
             command.Parameters.AddWithValue("@Description", role.Description);
@@ -416,45 +424,47 @@ namespace ExotischNederlandKaasus.DAL
 
                 // Retrieve the auto-incremented ID
                 command.CommandText = "SELECT CAST(scope_identity() AS INT)";
-                var result = command.ExecuteScalar();
-                if (result != DBNull.Value)
+                int addId = (int)command.ExecuteScalar();
+                role.SetRoleId(addId); // Use the method to set the ID
+                // Check if the role exists
+                string checkQuery = "SELECT COUNT(*) FROM ROLE WHERE Name = @Name";
+                SqlCommand checkCommand = new SqlCommand(checkQuery, connection);
+                checkCommand.Parameters.AddWithValue("@Name", role.Name);
+                int count = (int)checkCommand.ExecuteScalar();
+
+                if (count > 0)
                 {
-                    int addId = (int)result;
-                    role.SetRoleId(addId);
+                    // Update existing role
+                    command = new SqlCommand("UPDATE ROLE SET Description = @Description WHERE Name = @Name", connection);
                 }
+                else
+                {
+                    // Insert new role
+                    command = new SqlCommand("INSERT INTO ROLE (Name, Description) VALUES (@Name, @Description); SELECT CAST(scope_identity() AS INT)", connection);
+                }
+
+                command.Parameters.AddWithValue("@Name", role.Name);
+                command.Parameters.AddWithValue("@Description", role.Description);
+
+                // Auto increment the Role ID.
+                int roleId = (int)command.ExecuteScalar();
+                role.SetRoleId(roleId);
 
                 roles.Add(role);
             }
+            // Catch exceptions
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while adding the role.", ex);
+                // Handle exceptions 
+                throw new Exception("An error occurred while adding/updating the role.", ex);
             }
             finally
             {
                 connection.Close();
             }
-        }
-        public void UpdateRole(ROLE role)
-        {
-            string query = "UPDATE ROLE SET Name = @Name, Description = @Description WHERE RoleId = @RoleId";
-            SqlCommand command = new SqlCommand(query, connection);
-            command.Parameters.AddWithValue("@RoleId", role.RoleId);
-            command.Parameters.AddWithValue("@Name", role.Name);
-            command.Parameters.AddWithValue("@Description", role.Description);
 
-            try
-            {
-                connection.Open();
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An error occurred while updating the role.", ex);
-            }
-            finally
-            {
-                connection.Close();
-            }
+            roles.Add(role);
+            return roles;
         }
         public List<ROLE> GetRoles()
         {
@@ -499,18 +509,15 @@ namespace ExotischNederlandKaasus.DAL
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
-            finally
-            {
-                connection.Close();
-            }
         }
+
 
         // OBSERVATION METHODS FOR DATABASE INTERACTIONS
 
         // CRUD for Observation
         public List<OBSERVATION> GetAllObservations()
         {
-            observations.Clear();
+            Observation.Clear();
             string query = "SELECT * FROM OBSERVATION";
 
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -534,7 +541,7 @@ namespace ExotischNederlandKaasus.DAL
             }
 
             connection.Close();
-            return observations;
+            return Observation;
         }
     }
 

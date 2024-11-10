@@ -29,14 +29,9 @@ namespace ExotischNederlandKaasus.Models
         }
 
         // Interaction with the database methods.
-        public void AddRole()
+        public List<ROLE> AddOrUpdateRole()
         {
-            sqlDAL.AddRole(this);
-        }
-
-        public void UpdateRole(ROLE role)
-        {
-            sqlDAL.UpdateRole(role);
+            return sqlDAL.AddOrUpdateRole(this);
         }
 
         public List<ROLE> GetRoles()

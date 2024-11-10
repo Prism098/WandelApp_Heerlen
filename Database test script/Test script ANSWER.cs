@@ -8,129 +8,134 @@ namespace ExotischNederlandKaasus.Database_test_script
 {
     internal class Test_script_ANSWER
     {
+<<<<<<< HEAD
 
         //static void Main(string[] args)
+=======
+        
+        //    static void main(string[] args)
+>>>>>>> dc12d0ebeafb51765c6f2e3273a9da850a8e6acd
         //{
-        //    SQLDAL sqlDAL = SQLDAL.Instance;
-        //    bool continueProgram = true;
+        //    sqldal sqldal = sqldal.instance;
+        //    bool continueprogram = true;
 
         //    do
         //    {
-        //        Console.WriteLine("What do you want to do?");
-        //        Console.WriteLine("1. Add Answer");
-        //        Console.WriteLine("2. Delete Answer");
-        //        Console.WriteLine("3. Read Answers");
-        //        Console.WriteLine("4. Update Answer");
-        //        Console.WriteLine("5. Exit");
+        //        console.writeline("what do you want to do?");
+        //        console.writeline("1. add answer");
+        //        console.writeline("2. delete answer");
+        //        console.writeline("3. read answers");
+        //        console.writeline("4. update answer");
+        //        console.writeline("5. exit");
 
-        //        if (int.TryParse(Console.ReadLine(), out int choice))
+        //        if (int.tryparse(console.readline(), out int choice))
         //        {
-        //            continueProgram = HandleUserChoice(choice, sqlDAL);
+        //            continueprogram = handleuserchoice(choice, sqldal);
         //        }
         //        else
         //        {
-        //            Console.WriteLine("Invalid input. Please enter a number.");
+        //            console.writeline("invalid input. please enter a number.");
         //        }
-        //    } while (continueProgram);
+        //    } while (continueprogram);
         //}
 
-        //static bool HandleUserChoice(int choice, SQLDAL sqlDAL)
+        //static bool handleuserchoice(int choice, sqldal sqldal)
         //{
         //    switch (choice)
         //    {
         //        case 1:
-        //            AddAnswer(sqlDAL);
+        //            addanswer(sqldal);
         //            return true;
         //        case 2:
-        //            DeleteAnswer(sqlDAL);
+        //            deleteanswer(sqldal);
         //            return true;
         //        case 3:
-        //            ReadAnswers(sqlDAL);
+        //            readanswers(sqldal);
         //            return true;
         //        case 4:
-        //            UpdateAnswer(sqlDAL);
+        //            updateanswer(sqldal);
         //            return true;
         //        case 5:
         //            return false;
         //        default:
-        //            Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
+        //            console.writeline("invalid input. please enter a number between 1 and 5.");
         //            return true;
         //    }
         //}
 
-        //static void AddAnswer(SQLDAL sqlDAL)
+        //static void addanswer(sqldal sqldal)
         //{
-        //    Console.WriteLine("Enter the text of the new answer:");
-        //    string answerText = Console.ReadLine();
-        //    Console.WriteLine("Enter the QuestionId of the new answer:");
-        //    if (int.TryParse(Console.ReadLine(), out int questionId))
+        //    console.writeline("enter the text of the new answer:");
+        //    string answertext = console.readline();
+        //    console.writeline("enter the questionid of the new answer:");
+        //    if (int.tryparse(console.readline(), out int questionid))
         //    {
-        //        ANSWER newAnswer = new ANSWER(answerText, questionId);
-        //        sqlDAL.AddAnswer(newAnswer);
-        //        Console.WriteLine("Answer added successfully.");
+        //        answer newanswer = new answer(answertext, questionid);
+        //        sqldal.addanswer(newanswer);
+        //        console.writeline("answer added successfully.");
         //    }
         //    else
         //    {
-        //        Console.WriteLine("Invalid QuestionId entered.");
+        //        console.writeline("invalid questionid entered.");
         //    }
         //}
 
-        //static void DeleteAnswer(SQLDAL sqlDAL)
+        //static void deleteanswer(sqldal sqldal)
         //{
-        //    ReadAnswers(sqlDAL);
-        //    Console.WriteLine("Enter the AnswerId of the answer you want to delete:");
-        //    if (int.TryParse(Console.ReadLine(), out int answerIdToDelete))
+        //    readanswers(sqldal);
+        //    console.writeline("enter the answerid of the answer you want to delete:");
+        //    if (int.tryparse(console.readline(), out int answeridtodelete))
         //    {
-        //        sqlDAL.DeleteAnswer(answerIdToDelete);
-        //        Console.WriteLine("Answer deleted successfully.");
+        //        sqldal.deleteanswer(answeridtodelete);
+        //        console.writeline("answer deleted successfully.");
         //    }
         //    else
         //    {
-        //        Console.WriteLine("Invalid AnswerId entered.");
+        //        console.writeline("invalid answerid entered.");
         //    }
         //}
 
-        //static void ReadAnswers(SQLDAL sqlDAL)
+        //static void readanswers(sqldal sqldal)
         //{
-        //    List<ANSWER> answers = sqlDAL.GetAnswers();
-        //    Console.WriteLine("All answers:");
-        //    foreach (ANSWER answer in answers)
+        //    list<answer> answers = sqldal.getanswers();
+        //    console.writeline("all answers:");
+        //    foreach (answer answer in answers)
         //    {
-        //        Console.WriteLine($"AnswerId: {answer.AnswerId}, AnswerText: {answer.AnswerText}, QuestionId: {answer.QuestionId}");
+        //        console.writeline($"answerid: {answer.answerid}, answertext: {answer.answertext}, questionid: {answer.questionid}");
         //    }
         //}
 
-        //static void UpdateAnswer(SQLDAL sqlDAL)
+        //static void updateanswer(sqldal sqldal)
         //{
-        //    ReadAnswers(sqlDAL);
-        //    Console.WriteLine("Enter the AnswerId of the answer you want to update:");
-        //    if (int.TryParse(Console.ReadLine(), out int answerIdToUpdate))
+        //    readanswers(sqldal);
+        //    console.writeline("enter the answerid of the answer you want to update:");
+        //    if (int.tryparse(console.readline(), out int answeridtoupdate))
         //    {
-        //        ANSWER answerToUpdate = sqlDAL.GetAnswers().Find(a => a.AnswerId == answerIdToUpdate);
-        //        if (answerToUpdate != null)
+        //        answer answertoupdate = sqldal.getanswers().find(a => a.answerid == answeridtoupdate);
+        //        if (answertoupdate != null)
         //        {
-        //            Console.WriteLine("Enter the new text of the answer:");
-        //            answerToUpdate.AnswerText = Console.ReadLine();
-        //            Console.WriteLine("Enter the new QuestionId of the answer:");
-        //            if (int.TryParse(Console.ReadLine(), out int newQuestionId))
+        //            console.writeline("enter the new text of the answer:");
+        //            answertoupdate.answertext = console.readline();
+        //            console.writeline("enter the new questionid of the answer:");
+        //            if (int.tryparse(console.readline(), out int newquestionid))
         //            {
-        //                answerToUpdate.QuestionId = newQuestionId;
-        //                sqlDAL.UpdateAnswer(answerToUpdate);
-        //                Console.WriteLine("Answer updated successfully.");
+        //                answertoupdate.questionid = newquestionid;
+        //                sqldal.updateanswer(answertoupdate);
+        //                console.writeline("answer updated successfully.");
         //            }
         //            else
         //            {
-        //                Console.WriteLine("Invalid QuestionId entered.");
+        //                console.writeline("invalid questionid entered.");
         //            }
         //        }
         //        else
         //        {
-        //            Console.WriteLine("Answer not found.");
+        //            console.writeline("answer not found.");
         //        }
         //    }
         //    else
         //    {
-        //        Console.WriteLine("Invalid AnswerId entered.");
+        //        console.writeline("invalid answerid entered.");
         //    }
         }
     }

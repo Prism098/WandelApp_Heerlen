@@ -30,7 +30,5 @@ namespace ExotischNederlandKaasus.Models
             Specie = specie;
             SpecieId = specieid;
         }
-
-
     }
 }
