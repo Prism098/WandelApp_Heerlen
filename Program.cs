@@ -154,7 +154,7 @@ class Program
         int targetNode = GetNodeInput(nodeNames.Count) - 1;
 
         // Bereken en geef het kortste pad tussen de opgegeven locaties weer
-        List<int> path = Dijkstra.FindShortestPath(graph, startNode, targetNode);
+        List<int> path = ROUTE.FindShortestPath(graph, startNode, targetNode);
 
         if (path.Count > 0)
         {
