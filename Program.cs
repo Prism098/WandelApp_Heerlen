@@ -396,7 +396,8 @@ class Program
         }
         bool HandlePlayQuiz()
         {
-            PlayQuiz(QUESTION gamequestions);
+            QUESTION gamequestions = new QUESTION();
+            PlayQuiz(gamequestions.Game);
             Console.WriteLine(gamequestions);
             Console.WriteLine(gameanswers);
             return true;
@@ -1580,6 +1581,7 @@ class Program
         static string PlayQuiz(GAME gamequestions)
         {
             bool keepPlaying = true; //Bool om te checken of de gebruiker wil blijven spelen
+            var routeQuiz = new GAME(gamequestions); // Maak een nieuwe instantie van de RouteQuiz klasse
 
             while (keepPlaying) // Loop om de quiz te blijven spelen totdat de gebruiker stopt
             {
