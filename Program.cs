@@ -29,39 +29,7 @@ class Program
 
             if (int.TryParse(Console.ReadLine(), out int entityChoice))
             {
-                if (entityChoice == 13)
-                {
-                    continueProgram = HandleRoute();
-                    continueProgram = true; // Return to the home screen
-
-                }
-                else if (entityChoice == 14)
-                {
-                    continueProgram = HandlePlayQuiz();
-                    continueProgram = true; // Return to the home screen
-
-                }
-                else if (entityChoice == 15)
-                {
-                    continueProgram = false;
-                    break;
-
-                }
-
-                Console.WriteLine("Select the action you want to perform:");
-                Console.WriteLine("1. Add");
-                Console.WriteLine("2. Read");
-                Console.WriteLine("3. Update");
-                Console.WriteLine("4. Delete");
-
-                if (int.TryParse(Console.ReadLine(), out int actionChoice))
-                {
-                    continueProgram = HandleUserChoice(entityChoice, actionChoice);
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                }
+                HandleUserChoice(entityChoice);
             }
             else
             {
@@ -70,8 +38,21 @@ class Program
         } while (continueProgram);
 
         // Handle the choice of the user, whenever he chooses what entity he wants to adjust he will fall in this switch case, this switch case refers to another switch case.
-        bool HandleUserChoice(int entityChoice, int actionChoice)
+        bool HandleUserChoice(int entityChoice)
         {
+            int actionChoice = -1; // initialize to invalid in case bad switch condition
+            if (entityChoice < 13) // only ask for action choice if needed
+            {
+                Console.WriteLine("Select the action you want to perform:");
+                Console.WriteLine("1. Add");
+                Console.WriteLine("2. Read");
+                Console.WriteLine("3. Update");
+                Console.WriteLine("4. Delete");
+
+                if (!int.TryParse(Console.ReadLine(), out actionChoice))
+                    Console.WriteLine("Invalid input. Please enter a number.");
+            }
+
             switch (entityChoice)
             {
                 case 1:
@@ -393,8 +374,6 @@ class Program
         {
             QUESTION gamequestions = new QUESTION();
             PlayQuiz(gamequestions.Game);
-            Console.WriteLine(gamequestions);
-            //Console.WriteLine(gameanswers);
             return true;
         }
 
@@ -1620,7 +1599,7 @@ class Program
                 if (continuePlaying == "stop")
                 {
                     keepPlaying = false;
-                    Console.WriteLine("See you next time!");
+                    Console.WriteLine("See you next time! press enter to return to main menu");
                 }
             }
 
