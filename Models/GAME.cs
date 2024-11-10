@@ -38,7 +38,6 @@ namespace ExotischNederlandKaasus.Models
             StartTime = startTime;
             RouteId = routeId;
         }
-
         public GAME(GAME gamequestions)
         {
             this.gamequestions = gamequestions;

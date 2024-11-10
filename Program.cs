@@ -11,13 +11,8 @@ class Program
         bool continueProgram = true;
         bool exit = false;
 
-        List<QUESTION> gamequestions = new List<QUESTION>();
-        List<ANSWER> gameanswers = new List<ANSWER>();
-
         SQLDAL sqlDal = SQLDAL.Instance;
 
-        gamequestions = sqlDal.GetQuestions();
-        gameanswers = sqlDal.GetAnswers();
 
         do
         {
@@ -399,7 +394,7 @@ class Program
             QUESTION gamequestions = new QUESTION();
             PlayQuiz(gamequestions.Game);
             Console.WriteLine(gamequestions);
-            Console.WriteLine(gameanswers);
+            //Console.WriteLine(gameanswers);
             return true;
         }
 
@@ -1580,48 +1575,58 @@ class Program
         // Method to fetch a random question and check the answer
         static string PlayQuiz(GAME gamequestions)
         {
-            bool keepPlaying = true; //Bool om te checken of de gebruiker wil blijven spelen
-            var routeQuiz = new GAME(gamequestions); // Maak een nieuwe instantie van de RouteQuiz klasse
+            bool keepPlaying = true; // Bool to check if the user wants to keep playing
+            var sqlDAL = SQLDAL.Instance; // Get the instance of SQLDAL
 
-            while (keepPlaying) // Loop om de quiz te blijven spelen totdat de gebruiker stopt
+            // Fetch all questions and answers
+            List<QUESTION> questions = sqlDAL.GetQuestions();
+            List<ANSWER> answers = sqlDAL.GetAnswers();
+
+            Random random = new Random(); // Random object to select random questions
+
+            while (keepPlaying) // Loop to keep playing the quiz until the user stops
             {
-                var (questionText, correctAnswer) = routeQuiz.AskRandomQuestion(); // Variabele om random vraag op te halen uit de db
+                // Select a random question
+                int randomIndex = random.Next(questions.Count);
+                QUESTION randomQuestion = questions[randomIndex];
+
+                // Find the correct answer for the selected question
+                ANSWER correctAnswer = answers.FirstOrDefault(a => a.QuestionId == randomQuestion.QuestionId);
 
                 Console.WriteLine("Here's your question:");
-                Console.WriteLine(questionText);
+                Console.WriteLine(randomQuestion.QuestionText);
 
                 Console.Write("Your answer (TRUE/FALSE): ");
-                string userAnswer = Console.ReadLine()?.Trim().ToLower(); // Pak de user input naar lower case om type fouten te vermijden
+                string userAnswer = Console.ReadLine()?.Trim().ToLower(); // Get user input and convert to lower case to avoid typos
 
-                // check antwoord gegeven door gebruiker met de juiste antwoord van de db
+                // Check user answer with the correct answer from the db
                 if (correctAnswer == null)
                 {
                     Console.WriteLine("No correct answer found for this question.");
                 }
-                else if (userAnswer == correctAnswer?.ToLower())
+                else if (userAnswer == correctAnswer.AnswerText?.ToLower())
                 {
                     Console.WriteLine("Correct!");
                 }
                 else
                 {
-                    Console.WriteLine($"Incorrect! The correct answer is: {correctAnswer}");
+                    Console.WriteLine($"Incorrect! The correct answer is: {correctAnswer.AnswerText}");
                 }
 
                 Console.Write("\nContinue playing? Type 'stop' to quit, or press Enter to continue: ");
                 string continuePlaying = Console.ReadLine()?.Trim().ToLower();
 
-                // if statement om uit de quiz te gaan
+                // If statement to exit the quiz
                 if (continuePlaying == "stop")
                 {
                     keepPlaying = false;
                     Console.WriteLine("See you next time!");
-
                 }
             }
 
             Console.WriteLine("\nPress any key to return to the menu...");
             Console.ReadKey();
-            return ""; //Return empty string omdat het geen void methode is , maar een string moet returnen
+            return ""; // Return empty string because it's not a void method, but must return a string
         }
         //Methode om route tussen twee nodes te berekenen
         static bool CalculateRoute()
