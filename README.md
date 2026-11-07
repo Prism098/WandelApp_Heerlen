@@ -5,15 +5,6 @@ This project enforces structured commit messages, code review policies, and bran
 📌 Commit Guidelines (Conventional Commits)
 
 All commits must follow the Conventional Commits specification. This ensures clear and structured commit history.
-Commit Message Format:
-
-<type>(<scope>): <short description>
-
-[optional body]
-
-[optional footer(s)]
-
-[optional footer(s)]
 
 Commit Types:
 
@@ -46,10 +37,6 @@ Staging Branch Merges
 ✅ Code Commenting Standards (Conventional Comments)
 
 All comments should follow the Conventional Comments format for clarity and consistency.
-Comment Format:
-
-<type>: <message>
-
 Types of Comments:
 
     TODO: TODO: Implement the API integration
