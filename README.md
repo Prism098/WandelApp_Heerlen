@@ -1,4 +1,5 @@
-🤖 Monorepo for the: Casus Secur "Exotisch Nederland" voor de gemeente Heerlen.
+🤖 Monorepo for the: Casus BENT "Exotisch Nederland" voor de gemeente Heerlen. Full--Stack .NET applicatie in C#    
+
 Project Contribution Guidelines
 
 This project enforces structured commit messages, code review policies, and branch naming conventions to maintain a clean and scalable codebase.
