@@ -1,4 +1,4 @@
-🤖 Monorepo for the: Casus Secur "Exotisch Nederland" voor de gemeente Heerlen
+🤖 Monorepo for the: Casus Secur "Exotisch Nederland" voor de gemeente Heerlen.
 Project Contribution Guidelines
 
 This project enforces structured commit messages, code review policies, and branch naming conventions to maintain a clean and scalable codebase.
@@ -10,6 +10,8 @@ Commit Message Format:
 <type>(<scope>): <short description>
 
 [optional body]
+
+[optional footer(s)]
 
 [optional footer(s)]
 
@@ -26,18 +28,9 @@ Commit Types:
 
 Example:
 
+Prism098/cyb-41-swc
+
 feat(auth): add JWT authentication support
-
-💬 Code Review & Branching Policy
-Branch Naming
-
-All branches must follow a strict naming convention based on Linear ticket names:
-
-<username>/<ticket-id>-<short-description>
-
-Example:
-
-noaheutz/cyb-41-swc
 
 Copy button for branch names in linear:
 Screenshot 2025-02-20 at 12 11 34
